@@ -1102,6 +1102,11 @@ let SMSHelper = {
             }
         };
 //alert(window.permissions.SEND_SMS);
+        sms.hasPermission(function (hasPermission) {
+            alert(hasPermission);
+        }, function (e) {
+            alert('Something went wrong:' + e);
+        });
         sms.send(data.number, data.message, options, function () {
             app.methods.customNotification({text: LANGUAGE.PROMPT_MSG027});
             if (data.callback instanceof Function) {
