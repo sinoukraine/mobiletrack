@@ -800,6 +800,9 @@ let app = new Framework7({
         },
         setupPush: function() {
             let self = this;
+            if(!window.PushNotification){
+                return;
+            }
             push = PushNotification.init({
                 "android": {
                     //"senderID": "264121929701"
