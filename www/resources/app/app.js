@@ -1101,7 +1101,7 @@ let SMSHelper = {
                 intent: '' // send SMS without opening any other app
             }
         };
-alert(window.permissions.SEND_SMS);
+//alert(window.permissions.SEND_SMS);
         sms.send(data.number, data.message, options, function () {
             app.methods.customNotification({text: LANGUAGE.PROMPT_MSG027});
             if (data.callback instanceof Function) {
