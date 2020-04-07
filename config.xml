@@ -51,7 +51,7 @@
 
 	  	
         <!-- sms plugin -->        
-        <config-file target="/manifest/application" file="app/src/main/AndroidManifest.xml" mode="merge" > 
+        <config-file target="/manifest" file="app/src/main/AndroidManifest.xml" mode="merge" > 
             <uses-permission android:name="android.permission.SEND_SMS" />            
         </config-file>
         <!-- /sms plugin -->
