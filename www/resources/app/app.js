@@ -117,15 +117,15 @@ let app = new Framework7({
                     self.methods.handleAndroidBackButton();
                     self.methods.handleKeyboard();
 
-                    self.methods.setupPush();
+                    //self.methods.setupPush();
                     self.methods.setGeolocationPlugin();
 
-                    document.addEventListener("resume", function () {
+                    /*document.addEventListener("resume", function () {
                         AppEvents.emit('resume');
                     }, false);
                     document.addEventListener("pause", function () {
                         AppEvents.emit('pause');
-                    }, false);
+                    }, false);*/
                 }
 
 
