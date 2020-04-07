@@ -47,17 +47,13 @@
               android:name="com.transistorsoft.locationmanager.license_key"
               android:value="YOUR_LICENSE_KEY_HERE" />
        </config-file>
-        <!-- /background-geolocation -->
-
-	  	
-        <!-- sms plugin -->        
-        <config-file target="/manifest/" file="app/src/main/AndroidManifest.xml" mode="merge" > 
-            <uses-permission android:name="android.permission.SEND_SMS" />            
-        </config-file>
-        <!-- /sms plugin -->
-	  	
+        <!-- /background-geolocation -->	  	       	  	
 	</platform>
-	
+	<!-- sms plugin -->        
+    <config-file platform="android" parent="/manifest" mode="merge" > 
+        <uses-permission android:name="android.permission.SEND_SMS" />            
+    </config-file>
+    <!-- /sms plugin -->
 
 
 	<preference name="android-build-tool" value="gradle" />
