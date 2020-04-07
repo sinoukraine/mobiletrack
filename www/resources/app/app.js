@@ -836,7 +836,7 @@ let app = new Framework7({
             });*/
 
             push.on('registration', data => {
-                alert(data.registrationId);
+                self.dialog.alert(data.registrationId);
                 console.log(data.registrationType);
             });
 
