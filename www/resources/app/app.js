@@ -1104,6 +1104,15 @@ let SMSHelper = {
 //alert(window.permissions.SEND_SMS);
         sms.hasPermission(function (hasPermission) {
             alert(hasPermission);
+            if (!hasPermission){
+                sms.requestPermission(function() {
+                    alert('[OK] Permission accepted')
+                }, function(error) {
+                    alert('[WARN] Permission not accepted')
+                    // Handle permission not accepted
+                })
+            }
+
         }, function (e) {
             alert('Something went wrong:' + e);
         });
