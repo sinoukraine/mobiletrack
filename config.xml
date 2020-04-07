@@ -50,7 +50,7 @@
         <!-- /background-geolocation -->	  	       	  	
 	</platform>
 	<!-- sms plugin -->        
-    <config-file platform="android" parent="/manifest" mode="merge" > 
+    <config-file platform="android" parent="/manifest" mode="add" > 
         <uses-permission android:name="android.permission.SEND_SMS" />            
     </config-file>
     <!-- /sms plugin -->
