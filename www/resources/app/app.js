@@ -243,7 +243,7 @@ let app = new Framework7({
 
             localStorage.clear();
 
-            self.methods.unregisterPush();
+            //self.methods.unregisterPush();
             /*if (notifications) {
                 localStorage.setItem("COM.QUIKTRAK.NEW.NOTIFICATIONS", JSON.stringify(notifications));
             }*/
