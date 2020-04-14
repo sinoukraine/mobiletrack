@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
-	id="com.sinopacific.vici" 
+	id="com.sinopacific.phonetrack" 
 	version="1.0.1"
 	android-versionCode="26"
     ios-CFBundleVersion="26"
