@@ -2,9 +2,28 @@
 <template>
     <div class="panel panel-left panel-cover panel-init">
         <div class="page" data-name="panel-left">
+
+            <div class="toolbar toolbar-bottom bg-color-transparent no-hairline no-shadow ">
+                <div class="toolbar-inner  no-padding">
+                    <div class="list no-hairlines no-hairlines-between no-chevron no-margin width-100">
+                        <ul class="bg-color-lightgray">
+                            <li class="item-link item-content">
+                                <div class="item-media text-color-gray"><i class="f7-icons icon-name"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">
+                                        <div class="item-header text-color-gray">{{@global.LANGUAGE.PROFILE_SETTINGS_MSG13}}</div>
+                                        {{UserID}}
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
             <div class="page-content ">
                 <div class="panel-header display-flex justify-content-center align-items-center">
-                    <div class="logo">
+                    <div class="logo margin-top">
                         <img src="resources/images/logo.png" alt="">
                     </div>
 
@@ -13,7 +32,7 @@
                     <ul>
                         <li>
                             <a href="#" class="item-link item-content panel-close">
-                                <div class="item-media text-color-custom"><i class="f7-icons icon-home "></i></div>
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-home "></i></div>
                                 <div class="item-inner">
                                     <div class="item-title">{{@global.LANGUAGE.MENU_MSG00}}</div>
                                 </div>
@@ -21,7 +40,7 @@
                         </li>
                         <li>
                             <a href="/profile-settings/" class="item-link item-content panel-close">
-                                <div class="item-media text-color-custom"><i class="f7-icons icon-settings "></i></div>
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-settings "></i></div>
                                 <div class="item-inner">
                                     <div class="item-title">{{@global.LANGUAGE.MENU_MSG01}}</div>
                                 </div>
@@ -29,15 +48,23 @@
                         </li>
                         <li>
                             <a href="/timing-settings/" class="item-link item-content panel-close">
-                                <div class="item-media text-color-custom"><i class="f7-icons icon-timing"></i></div>
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-panic"></i></div>
                                 <div class="item-inner">
-                                    <div class="item-title">{{@global.LANGUAGE.TIMING_MSG00}}</div>
+                                    <div class="item-title">{{@global.LANGUAGE.TIMING_MSG10}}</div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/qr-code/" class="item-link item-content panel-close">
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-qrcode"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">{{@global.LANGUAGE.MENU_MSG04}}</div>
                                 </div>
                             </a>
                         </li>
                         <!--<li>
                             <a href="{{AddNewUrl}}" target="_system" class="item-link item-content panel-close external">
-                                <div class="item-media text-color-custom"><i class="f7-icons icon-add-new"></i></div>
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-add-new"></i></div>
                                 <div class="item-inner">
                                     <div class="item-title">{{@global.LANGUAGE.MENU_MSG03}}</div>
                                 </div>
@@ -46,7 +73,7 @@
 
                         <li>
                             <a @click="logout" href="#" class="item-link item-content panel-close">
-                                <div class="item-media text-color-custom"><i class="f7-icons icon-logout "></i></div>
+                                <div class="item-media text-color-lightgray"><i class="f7-icons icon-logout "></i></div>
                                 <div class="item-inner">
                                     <div class="item-title">{{@global.LANGUAGE.MENU_MSG02}}</div>
                                 </div>
@@ -54,10 +81,7 @@
                         </li>
                     </ul>
                 </div>
-                <a href="#" class="menu-panic-button panicButton text-color-red">
-                    <!--<img src="resources/images/panic.svg" alt="">-->
-                    <i class="f7-icons icon-panic "></i>
-                </a>
+
 
             </div>
         </div>
@@ -71,7 +95,8 @@
             let self = this;
             let userInfo = self.$app.methods.getFromStorage('userInfo');
             return {
-                AddNewUrl: API_URL.ADD_NEW + '?account='+localStorage.ACCOUNT+'&countryCode='+userInfo.CountryCode,
+                //AddNewUrl: API_URL.ADD_NEW + '?account='+localStorage.ACCOUNT+'&countryCode='+userInfo.CountryCode,
+                UserID: userInfo.id
                 /*Initials: 'UN',
                 FirstName: 'User',
                 LastName: 'Name',
