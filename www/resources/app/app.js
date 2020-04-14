@@ -87,7 +87,7 @@ let compiledTemplate = Template7.compile(htmlTemplate);
 $$('#app').append(compiledTemplate({RegisterUrl: API_URL.REGISTER}));
 
 // Init App
-window.app = new Framework7({
+var app = new Framework7({
     id: 'com.sinopacific.phonetrack',
     root: '#app',
     name: 'ViCi',
