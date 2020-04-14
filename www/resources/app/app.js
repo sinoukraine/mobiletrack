@@ -881,7 +881,6 @@ window.app = new Framework7({
         },
         setupPush: function() {
             let self = this;
-
             if(!window.PushNotification){
                 return;
             }
@@ -902,31 +901,29 @@ window.app = new Framework7({
                 "windows": {}
             });
 
-            push.on('registration', function(data) {
-                self.dialog.alert(data.registrationId);
-                //alert(data.registrationId);
+            /*push.on('registration', function(data) {
+                alert('reg = ' + JSON.stringify(data));
                 console.log('registration event: ' + data.registrationId);
                 // alert('registered '+ data.registrationId);
-                //alert(localStorage.PUSH_DEVICE_TOKEN);
-                if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
+                /!*if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
                     // Save new registration ID
                     localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
                     // Post registrationId to your app server as the value has changed
                     setTimeout(function() {
                         self.methods.refreshToken(data.registrationId);
-                        //self.methods.getNewData(true);
+                        self.methods.getNewData(true);
                     },1000);
-                }
-            });
-
-            /*push.on('registration', data => {
-                alert(data.registrationId);
-                console.log(data.registrationType);
+                }*!/
             });*/
+
+            push.on('registration', data => {
+                self.dialog.alert(data.registrationId);
+                console.log(data.registrationType);
+            });
 
             push.on('error', function(e) {
                 //console.log("push error = " + e.message);
-               // alert("push error = " + JSON.stringify(e));
+                // alert("push error = " + JSON.stringify(e));
                 alert("push error = " + e.message);
             });
 
