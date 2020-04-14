@@ -14,25 +14,41 @@
                     {{@global.LANGUAGE.HOME_MSG00}}
                 </div>
                 <div class="right">
-                    <div class="right">
-                        <a href="#" @click="refreshMap" class="link icon-only">
-                            <i class="f7-icons icon-refresh-map"></i>
-                        </a>
-                    </div>
+                    <a href="#" @click="showShieldStatusPopover" class="link icon-only {{StatusShieldColor}}" >
+                        <i class="f7-icons icon-shield position-relative">{{#if StatusDaysCount}}<span class="badge badge-with-border color-red">{{StatusDaysCount}}</span>{{/if}}</i>
+                    </a>
+                    <a href="/notifications/" class="link icon-only " >
+                        <i class="f7-icons icon-notifications position-relative">{{#if NotificationCount}}<span class="badge badge-with-border color-red">{{NotificationCount}}</span>{{/if}}</i>
+                    </a>
                 </div>
             </div>
         </div>
 
         <div class="page-content">
-            <!--<div class="home-map-wrapper">-->
-                <div id="homeMap" class="map"></div>
 
-                <div class="fab fab-right-bottom2 fab-custom ">
-                    <a href="#" @click="sharePosition" class="bg-color-custom elevation-hover-10 flex-direction-column shareButton">
-                        <i class="f7-icons icon-share"></i>
-                        <div class="fab-text">{{@global.LANGUAGE.COM_MSG028}}</div>
-                    </a>
-                </div>
+            <div id="homeMap" class="map"></div>
+
+            <div class="fab fab-left-bottom3 fab-custom ">
+                <a href="#" @click="refreshMap" class="bg-color-darkgray elevation-hover-10 flex-direction-column shareButton">
+                    <i class="f7-icons icon-refresh-map"></i>
+                    <div class="fab-text">{{@global.LANGUAGE.HOME_MSG10}}</div>
+                </a>
+            </div>
+
+            <div class="fab fab-left-bottom2 fab-custom ">
+                <a href="#" @click="sharePosition" class="bg-color-darkgray elevation-hover-10 flex-direction-column shareButton">
+                    <i class="f7-icons icon-share"></i>
+                    <div class="fab-text">{{@global.LANGUAGE.COM_MSG028}}</div>
+                </a>
+            </div>
+
+            <div class="fab fab-right-bottom2 fab-custom ">
+                <a href="{{InformButtonLink}}" class="elevation-hover-10 flex-direction-column {{InformButtonBgClass}}">
+                    <i class="f7-icons icon-covid19"></i>
+                    <div class="fab-text">{{@global.LANGUAGE.COM_MSG032}}</div>
+                </a>
+            </div>
+
             <div class="fab-custom2">
                 <a class="button button-raised button-fill button-large color-red panicButton"><i class="f7-icons icon-panic2 vertical-align-middle margin-right"></i>{{@global.LANGUAGE.PANIC_BUTTON_MSG03}}</a>
             </div>
@@ -54,11 +70,308 @@
                 //Email: 'test@test.com',
                 Address: 'Loading...',
                 Battery: '-',
+                //CovidSatusPositive: false,
+
+                Covid19Status: this.$app.data.CovidSatus,
+                Covid19StatusType: this.$app.data.CovidSatusType,
+
             };
 
             return ret;
         },
         methods: {
+            updateCovidStatus: function(data={}){
+                let self = this;
+                if(!self.$app.methods.isObjEmpty(data) && data.Covid19StatusType){
+                    let statusObj = Helper.Methods.covid19Enum(data.Covid19StatusType);
+
+                    data.StatusShieldColor = statusObj.textColor;
+                    data.Covid19StatusType = parseInt(data.Covid19StatusType);
+                    data.InformButtonLink = '/inform-about-test/';
+                    data.InformButtonBgClass = 'bg-color-custom';
+
+                    switch (data.Covid19StatusType) {
+                        case 2:
+                            data.InformButtonLink = '/inform-about-recovery/';
+                            data.InformButtonBgClass = 'bg-color-orange';
+
+                            break;
+                        case 3:
+                            data.InformButtonLink = '/inform-about-recovery/';
+                            data.InformButtonBgClass = 'bg-color-blue';
+
+                            break;
+                        case 4:
+                           /* data.InformButtonLink = '/inform-about-test/';
+                            data.InformButtonBgClass = 'bg-color-custom';*/
+
+                            break;
+                        case 5:
+                            /*data.InformButtonLink = '/inform-about-test/';
+                            data.InformButtonBgClass = 'bg-color-custom';*/
+                            break;
+                    }
+                }
+
+                self.$setState(data,()=>{
+                    if(self.Marker){
+                        self.Marker.setIcon(Helper.Methods.getCovid19Marker(self.Covid19StatusType));
+                        if(self.LastPosInfo){
+                            self.Marker.setPopupContent(self.getMarkerDataTable(self.LastPosInfo, self.LastPosInfoLocal));
+                        }
+                    }
+                });
+            },
+            showShieldStatusPopover: function(e){
+                let self = this;
+
+                let dateTitle = '';
+                switch (self.Covid19StatusType) {
+                    case 2: case 3: case 4:
+                        dateTitle = LANGUAGE.PROMPT_MSG061;
+                        break;
+                    case 5:
+                        dateTitle = LANGUAGE.PROMPT_MSG063;
+                        break;
+                }
+                let content =   `<div class="popover menu-popover" >
+                                        <div class="popover-inner">
+                                            <div class="block-title">${ LANGUAGE.PROMPT_MSG060 }</div>
+                                            <div class="block">
+                                                <p>${LANGUAGE.PROMPT_MSG062}: <span class="${self.StatusShieldColor}">${ self.$app.data.Covid19Status }</span></p>`;
+                if (self.Covid19StatusDate){
+                    content +=`                 <p>${ dateTitle }: ${ self.Covid19StatusDate }</p>`;
+                }
+                content +=`                    <a href="/qr-code/" class="margin-top color-blue button button-outline button-raised popover-close">${ LANGUAGE.PROMPT_MSG064 }</a>
+                                            </div>
+
+                                        </div>
+                                    </div>`;
+
+                self.$app.popover.create({
+                    //backdrop: true,
+                    closeByOutsideClick: true,
+                    targetEl: $$(e.target).closest('a'),
+                    content: content,
+                    on: {
+                        opened: function(popover){
+
+                        },
+                        closed: function(popover){
+                            popover.destroy();
+                        }
+                    }
+                }).open();
+            },
+
+
+            /*setCovid19Status: function(data){
+                //API_URL.SET_COVID19_STATUS
+                let self = this;
+
+                self.$app.progressbar.show('gray');
+                self.$app.request.promise.get(API_URL.SET_COVID19_STATUS, data, 'json')
+                    .then(function (result) {
+                        if(result.data.MajorCode === '000') {
+                            self.$setState({
+                                CovidSatusPositive: data.status === 1,
+                                CovidSatusPositiveBeginDate: result.data.Data.BeginTime ? moment(result.data.Data.BeginTime).add(self.$app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT4) : ''
+                            });
+                            if(self.Marker){
+                                if (data.status === 1){
+                                    self.Marker.setIcon(Helper.MarkerIcon[3]);
+                                }else{
+                                    self.Marker.setIcon(Helper.MarkerIcon[2]);
+                                }
+                                if(self.LastPosInfo){
+                                    self.Marker.setPopupContent(self.getMarkerDataTable(self.LastPosInfo, self.LastPosInfoLocal));
+                                }
+                            }
+                            self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG032});
+                        }else{
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${JSON.stringify(result.data.Data)}`);
+                        }
+                    })
+                    .finally(function () {
+                        self.$app.utils.nextTick(()=>{
+                            self.$app.progressbar.hide();
+                        },500);
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                        if (err && err.status === 404){
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                        }else{
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                        }
+                    });
+            },*/
+            /*changeCovidStatus: function(){
+                let self = this;
+                let text = LANGUAGE.PROMPT_MSG031;
+                let title = LANGUAGE.COM_MSG033;
+                if(!self.CovidSatusPositive){
+                    text = LANGUAGE.PROMPT_MSG030;
+                    title = LANGUAGE.COM_MSG032;
+                }
+
+                self.$app.dialog.create({
+                    title: title,
+                    text: text,
+                    buttons: [
+                        {
+                            text: LANGUAGE.COM_MSG035,
+                            color: 'black'
+                        },
+                        {
+                            text: LANGUAGE.COM_MSG034,
+                            color: 'custom',
+                            bold: true,
+                            onClick: function () {
+                                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+
+                                if(self.$app.methods.isObjEmpty(trackingConfig)){
+                                    self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG057, callback: function () {
+                                            self.$app.view.main.router.navigate('/timing-settings/');
+                                        }});
+                                    return;
+                                }
+
+                               /!* let asset = POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')];
+                                self.setCovid19Status({
+                                    imei: asset.IMEI,
+                                    status: self.CovidSatusPositive ? 0 : 1,
+                                    lat: asset.posInfo.lat,
+                                    lng: asset.posInfo.lng
+                                });*!/
+
+                                self.getCurrentPosition(function (location) {
+                                    self.setCovid19Status({
+                                        imei: trackingConfig.IMEI.padStart(16, '0'),
+                                        status: self.CovidSatusPositive ? 0 : 1,
+                                        lat: location.coords.latitude,
+                                        lng: location.coords.longitude
+                                    });
+                                });
+                            }
+                        },
+                    ]
+                }).open();
+            },*/
+            /*getMyCurrentCovid19Status: function(){
+                let self = this;
+                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+                if(self.$app.methods.isObjEmpty(trackingConfig)){
+                    console.log('tracking not setuped');
+                    return;
+                }
+
+                self.$app.progressbar.show('gray');
+                self.$app.request.promise.get(API_URL.GET_COVID19_STATUS, {imei: trackingConfig.IMEI.padStart(16, '0')}, 'json')
+                    .then(function (result) {
+                        if(result.data.MajorCode === '000') {
+                            self.$setState({
+                                CovidSatusPositive: result.data.Data.Status === 1,
+                                CovidSatusPositiveBeginDate: result.data.Data.BeginTime ? moment(result.data.Data.BeginTime).add(self.$app.data.UTCOFFSET,'minutes').format(window.COM_TIMEFORMAT4) : ''
+                            });
+
+                            if(self.Marker){
+                                if (result.data.Data.Status === 1){
+                                    self.Marker.setIcon(Helper.MarkerIcon[3]);
+                                }else{
+                                    self.Marker.setIcon(Helper.MarkerIcon[2]);
+                                }
+                                if(self.LastPosInfo){
+                                    self.Marker.setPopupContent(self.getMarkerDataTable(self.LastPosInfo, self.LastPosInfoLocal));
+                                   /!* self.Marker.getPopup().update();
+                                    console.log(self.Marker.getPopup())*!/
+                                }
+                            }
+                        }else{
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG023 + `<br>MajorCode: ${result.data.MajorCode}<br>MinorCode: ${result.data.MinorCode}<br>${JSON.stringify(result.data.Data)}`);
+                        }
+                    })
+                    .finally(function () {
+                        self.$app.progressbar.hide();
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                        if (err && err.status === 404){
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                        }else{
+                            self.$app.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                        }
+                    });
+            },*/
+            updateMarker: function (location) {
+                let self = this;
+                self.$setState({
+                    LastPosInfo: location,
+                    LastPosInfoLocal: true
+                });
+                if(!self.Marker){
+                    self.Marker = L.marker([location.coords.latitude, location.coords.longitude], { icon: Helper.Methods.getCovid19Marker(self.Covid19StatusType) });
+                    self.Marker
+                            .bindPopup(self.getMarkerDataTable(location, true), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                            .on('popupopen', function (e) {
+                                if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
+                                    Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
+                                        self.$setState({
+                                            Address: address,
+                                            LastAddressQuery: [location.coords.latitude, location.coords.longitude],
+                                            LastPosInfo: location,
+                                            LastPosInfoLocal: true
+                                        });
+                                        e.target.setPopupContent(self.getMarkerDataTable(location, true));
+                                        e.popup.update();
+                                    });
+                                }
+                            })
+                            .addTo(self.MarkersGroup);
+                    self.MarkersGroup.addTo(self.Map);
+                }
+                self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
+                self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
+                if (self.MarkersGroup.getBounds().isValid()) {
+                    self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
+                }
+
+                if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
+                    Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                        self.$setState({
+                            Address: address,
+                            LastAddressQuery: [location.coords.latitude, location.coords.longitude],
+                            LastPosInfo: location,
+                            LastPosInfoLocal: true
+                        });
+                        self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
+                    });
+                }
+            },
+
+
+            watchUserLocation: function(){
+                let self = this;
+
+                if(!bgGeo){
+                    return;
+                }
+
+                bgGeo.watchPosition((location) => {
+                    if(!self.LastPosInfo || self.LastPosInfo.timestamp < location.timestamp ){
+                        self.updateMarker(location);
+                    }
+
+                    console.log("[watchPosition] -", location);
+                }, (errorCode) => {
+                    console.log("[watchPosition] ERROR -", errorCode);
+                }, {
+                    interval: 30*1000,
+                    desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+                    persist: true,
+                    timeout: 60000
+                });
+            },
             getCurrentPosition: function(callback){
                 let self = this;
                 if (!bgGeo){
@@ -106,7 +419,55 @@
             refreshMap: function () {
                 let self = this;
 
-                let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+                self.getCurrentPosition(function (location) {
+                    self.updateMarker(location);
+                });
+                    /*self.$setState({
+                        LastPosInfo: location,
+                        LastPosInfoLocal: true
+                    });
+                    if(!self.Marker){
+                        self.Marker = L.marker([location.coords.latitude, location.coords.longitude], { icon: Helper.Methods.getCovid19Marker(self.Covid19StatusType) });
+
+                        self.Marker
+                                .bindPopup(self.getMarkerDataTable(location, true), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
+                                .on('popupopen', function (e) {
+                                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]) {
+                                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
+                                            self.$setState({
+                                                Address: address,
+                                                LastAddressQuery: [location.coords.latitude, location.coords.longitude],
+                                                LastPosInfo: location,
+                                                LastPosInfoLocal: true
+                                            });
+                                            e.target.setPopupContent(self.getMarkerDataTable(location, true));
+                                            e.popup.update();
+                                        });
+                                    }
+                                })
+                                .addTo(self.MarkersGroup);
+                        self.MarkersGroup.addTo(self.Map);
+                    }
+                    self.Marker.setLatLng([location.coords.latitude, location.coords.longitude]);
+                    self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
+                    if (self.MarkersGroup.getBounds().isValid()) {
+                        self.Map.fitBounds(self.MarkersGroup.getBounds(),{padding:[16,16], maxZoom: 15});
+                    }
+
+                    if (!self.LastAddressQuery || location.coords.latitude !== self.LastAddressQuery[0] || location.coords.longitude !== self.LastAddressQuery[1]){
+                        Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
+                            self.$setState({
+                                Address: address,
+                                LastAddressQuery: [location.coords.latitude, location.coords.longitude],
+                                LastPosInfo: location,
+                                LastPosInfoLocal: true
+                            });
+                            self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
+                        });
+                    }
+                });*/
+
+                    /*let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
 
                 if(self.$app.methods.isObjEmpty(trackingConfig)){
                     self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG057, callback: function () {
@@ -126,8 +487,14 @@
                     });
                 }else{
                     self.getCurrentPosition(function (location) {
+                        self.$setState({
+                            LastPosInfo: location,
+                            LastPosInfoLocal: true
+                        });
                         if(!self.Marker){
-                            self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: Helper.MarkerIcon[0]});
+                            /!*self.Marker = L.marker([location.coords.latitude, location.coords.longitude], {icon: self.CovidSatusPositive ? Helper.MarkerIcon[3] : Helper.MarkerIcon[2]});*!/
+                            self.Marker = L.marker([location.coords.latitude, location.coords.longitude], { icon: Helper.Methods.getCovid19Marker(self.Covid19StatusType) });
+
                             self.Marker
                                 .bindPopup(self.getMarkerDataTable(location, true), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
                                 .on('popupopen', function (e) {
@@ -135,7 +502,9 @@
                                         Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude},function(address){
                                             self.$setState({
                                                 Address: address,
-                                                LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                                LastAddressQuery: [location.coords.latitude, location.coords.longitude],
+                                                LastPosInfo: location,
+                                                LastPosInfoLocal: true
                                             });
                                             e.target.setPopupContent(self.getMarkerDataTable(location, true));
                                             e.popup.update();
@@ -155,30 +524,31 @@
                             Helper.Methods.getAddressByGeocoder({lat: location.coords.latitude, lng: location.coords.longitude}, function (address) {
                                 self.$setState({
                                     Address: address,
-                                    LastAddressQuery: [location.coords.latitude, location.coords.longitude]
+                                    LastAddressQuery: [location.coords.latitude, location.coords.longitude],
+                                    LastPosInfo: location,
+                                    LastPosInfoLocal: true
                                 });
                                 self.Marker.setPopupContent(self.getMarkerDataTable(location, true));
                             });
                         }
                     });
-                }
+                }*/
+
             },
-            updateMarker: function(){
+            /*updateMarker: function(){
                 let self = this;
                 let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
                 if(!self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.IMEI && !self.$app.methods.isObjEmpty(POSINFOASSETLIST) && POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')]){
                     let asset = POSINFOASSETLIST[trackingConfig.IMEI.padStart(16, '0')];
-                    /*if(!asset){
-                        self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG058, title: trackingConfig.IMEI});
-                        return;
-                    }*/
-                    /*if(!asset.posInfo || parseFloat(asset.posInfo.lat) === 0 && parseFloat(asset.posInfo.lng) === 0){
-                        self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG059, title: trackingConfig.IMEI});
-                        return;
-                    }*/
                     if (asset && asset.posInfo && parseFloat(asset.posInfo.lat) !== 0 && parseFloat(asset.posInfo.lng) !== 0){
+                        self.$setState({
+                            LastPosInfo: asset,
+                            LastPosInfoLocal: false
+                        });
                         if(!self.Marker){
-                            self.Marker = L.marker([asset.posInfo.lat, asset.posInfo.lng], {icon: Helper.MarkerIcon[0]});
+                            //self.Marker = L.marker([asset.posInfo.lat, asset.posInfo.lng], {icon: self.CovidSatusPositive ? Helper.MarkerIcon[3] : Helper.MarkerIcon[2]});
+                            self.Marker = L.marker([asset.posInfo.lat, asset.posInfo.lng], { icon: Helper.Methods.getCovid19Marker(self.Covid19StatusType) });
+
                             self.Marker
                                 .bindPopup(self.getMarkerDataTable(asset), {maxWidth:self.$app.data.MaxMapPopupWidth, closeButton: false})
                                 .on('popupopen', function (e) {
@@ -186,7 +556,9 @@
                                         Helper.Methods.getAddressByGeocoder({lat: asset.posInfo.lat, lng: asset.posInfo.lng}, function (address) {
                                             self.$setState({
                                                 Address: address,
-                                                LastAddressQuery: [asset.posInfo.lat, asset.posInfo.lng]
+                                                LastAddressQuery: [asset.posInfo.lat, asset.posInfo.lng],
+                                                LastPosInfo: asset,
+                                                LastPosInfoLocal: false
                                             });
                                             self.Marker.setPopupContent(self.getMarkerDataTable(asset));
                                             e.popup.update();
@@ -205,7 +577,9 @@
                             Helper.Methods.getAddressByGeocoder({lat: asset.posInfo.lat, lng: asset.posInfo.lng}, function (address) {
                                 self.$setState({
                                     Address: address,
-                                    LastAddressQuery: [asset.posInfo.lat, asset.posInfo.lng]
+                                    LastAddressQuery: [asset.posInfo.lat, asset.posInfo.lng],
+                                    LastPosInfo: asset,
+                                    LastPosInfoLocal: false
                                 });
                                 self.Marker.setPopupContent(self.getMarkerDataTable(asset));
                             });
@@ -213,7 +587,7 @@
                     }
                 }
 
-            },
+            },*/
             getMarkerDataTable: function(objData={}, localPosition=false){
                 let self = this;
 
@@ -273,6 +647,10 @@
                         markerData += '</tr>';
                     }
                     markerData +=   '<tr>';
+                    markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG09+'</td>';
+                    markerData +=       `<td class="marker-data-value">${ self.Covid19Status } ${self.StatusDaysCount ? self.StatusDaysCount+' '+COM_MSG045 : '' }</td>`;
+                    markerData +=   '</tr>';
+                    markerData +=   '<tr>';
                     markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
                     markerData +=       '<td class="marker-data-value">'+ customAddress + '</td>';
                     markerData +=   '</tr>';
@@ -309,13 +687,16 @@
                         markerData +=       '<td class="marker-data-value">'+deirectionCardinal+'</td>';
                         markerData +=   '</tr>';
                         markerData +=   '<tr>';
+                        markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG09+'</td>';
+                        markerData +=       `<td class="marker-data-value">${ self.Covid19Status } ${self.StatusDaysCount ? self.StatusDaysCount+' '+LANGUAGE.COM_MSG045 : '' }</td>`;
+                        markerData +=   '</tr>';
+                        markerData +=   '<tr>';
                         markerData +=       '<td class="marker-data-caption">'+LANGUAGE.HOME_MSG06+'</td>';
                         markerData +=       '<td class="marker-data-value">'+customAddress+'</td>';
                         markerData +=   '</tr>';
                         markerData += '</table>';
                     }
                 }
-
                 return markerData;
             },
             sharePosition: function () {
@@ -342,7 +723,44 @@
                         alert("Sharing failed with message: " + msg);
                     });
                 });
+            },
 
+            startTracking: function (data) {
+                let self = this;
+
+                if (!bgGeo) {
+                    self.$app.dialog.alert(LANGUAGE.PROMPT_MSG006);
+                    return;
+                }
+                bgGeo.setConfig({
+                    distanceFilter: 0,            // Must be 0 or locationUpdateInterval is ignored!
+                    locationUpdateInterval: data.Interval,  // Get a location every 5 seconds
+                    //schedule: data.Schedule,
+                    //url: API_URL.UPLOAD_LINK,
+                    params: {
+                        ID: data.ID,
+                    }
+                }, function (state) {
+                    if (!state.enabled) {
+                        bgGeo.start().then(function() {
+                            self.refreshMap();
+                            //alert('- BackgroundGeolocation tracking started')
+                            // console.log('- BackgroundGeolocation tracking started');
+                        });
+                    }
+
+                    /*bgGeo.requestPermission().then((status) => {
+                        bgGeo.startSchedule(function() {
+                            //self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
+                            self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG074});
+                           // mainView.router.back();
+                        });
+                    }).catch((status) => {
+                        self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG008});
+                        console.log('[requestPermission] REJECTED', status);
+                       // self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
+                    });*/
+                });
             }
         },
 
@@ -358,13 +776,40 @@
                     self.getCurrentPosition();
                 }*/
 
+
+                AppEvents.on('covidStatusChanged', self.updateCovidStatus);
                 AppEvents.on('positionUpdateReceived', self.updateMarker);
                 AppEvents.on('signedIn', function (userInfo){
                     self.$setState({
                         LoginDone: true,
-                        Phone: userInfo.Mobile,
+                        Phone: userInfo.phoneNumber,
                     });
+                    //self.getMyCurrentCovid19Status();
+                    self.updateCovidStatus({
+                        Covid19StatusType: 1,
+                        Covid19Status: LANGUAGE.COM_MSG041,
+                        StatusDaysCount: 0
+                    });
+                    self.startTracking({
+                        Interval: 60*1000,
+                        ID: userInfo.id,
+                        //Schedule: ["1-7 00:00-23:59"],
+                        //ScheduleState: true
+                    });
+                    self.watchUserLocation();
                 });
+                AppEvents.on('appResume', function (){
+                    if(self.LoginDone){
+                        self.watchUserLocation();
+                    }
+                });
+                AppEvents.on('appPause', function (){
+                    if(!bgGeo){
+                        return;
+                    }
+                    bgGeo.stopWatchPosition();
+                });
+
                 AppEvents.on('signedOut', function (){
                     self.$setState({
                         LoginDone: false
@@ -372,17 +817,21 @@
                     if(!bgGeo){
                         return;
                     }
+                    bgGeo.stopWatchPosition();
+                    bgGeo.stop();
                     bgGeo.stopSchedule(function() {
-                        let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
+                        //bgGeo.stop();
+                        /*let trackingConfig = self.$app.methods.getFromStorage('trackingConfig');
                         if( !self.$app.methods.isObjEmpty(trackingConfig) && trackingConfig.ScheduleState){
                             self.$app.methods.customNotification({text: LANGUAGE.PROMPT_MSG009});
                             // You must explicitly stop tracking if currently enabled
                             bgGeo.stop();
                             self.$app.methods.setInStorage({name:'trackingConfig', data: {ScheduleState: false}});
-                        }
+                        }*/
                     });
                 });
             },
+
             pageBeforeRemove: function () {
                 AppEvents.off('signedIn');
                 AppEvents.off('signedOut');

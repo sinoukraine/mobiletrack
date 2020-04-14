@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
-	id="com.sinopacific.phonetrack" 
+	id="com.sinopacific.vici" 
 	version="1.0.1"
 	android-versionCode="26"
     ios-CFBundleVersion="26"
@@ -8,9 +8,9 @@
 	xmlns:cdv="http://cordova.apache.org/ns/1.0"  	
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	defaultlocale="en-US">
-    <name>PhoneTrack</name>
+    <name>Vici</name>
     <description>
-        PhoneTrack gps tracking app
+        Vici gps tracking app
     </description>
     <author email="support@phonegap.com" href="http://quiktrak.com.au">
         M2M Global Technology Limited

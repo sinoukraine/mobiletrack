@@ -11,7 +11,7 @@
 
     <meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; font-src 'self' data:; media-src *; img-src * 'self' data:; style-src 'self' http://* https://* 'unsafe-inline' *; script-src 'self' http://* https://* 'unsafe-inline' 'unsafe-eval' *" />
 
-    <title>PhoneTrack</title>
+    <title>ViCi</title>
 
     <link rel="shortcut icon" href="resources/images/favicon.png" type="image/x-icon">
     <link rel="apple-touch-icon" href="resources/images/icon-square.png">
@@ -42,7 +42,7 @@
                 <div class="page">
                     <div class="page-content login-screen-content">
                         <div class="login-screen-title logo">
-                            <img src="resources/images/logo.png" alt="">
+                            <img src="resources/images/logo.jpg" alt="">
                         </div>
                         <form name="login-form">
                             <div class="list">
@@ -50,7 +50,7 @@
                                     <li class="item-content item-input item-input-outline">
                                         <div class="item-inner">
                                             <div class="item-input-wrap">
-                                                <input type="text" name="username" placeholder="{{@global.LANGUAGE.LOGIN_SCREEN_MSG00}}" required validate>
+                                                <input type="tel" name="username" placeholder="{{@global.LANGUAGE.COM_MSG036}}" required validate>
                                                 <span class="input-clear-button"></span>
                                             </div>
                                         </div>
@@ -75,7 +75,7 @@
                                         <button type="submit" class="button button-fill button-large">{{@global.LANGUAGE.LOGIN_SCREEN_MSG02}}</button>
                                     </li>
                                     <li class="padding">
-                                        <a href="{{RegisterUrl}}" target="_system" class="external button button-fill button-large color-white text-color-black">{{@global.LANGUAGE.LOGIN_SCREEN_MSG03}}</a>
+                                        <a href="/registration/" class=" button button-fill button-large bg-color-darkgray text-color-white">{{@global.LANGUAGE.LOGIN_SCREEN_MSG03}}</a>
                                         <!--<button type="button" class="button button-fill button-large color-white text-color-black">{{@global.LANGUAGE.LOGIN_SCREEN_MSG03}}</button>-->
                                     </li>
                                 </ul>
@@ -102,6 +102,8 @@
 <script type="text/javascript" src="resources/libraries/moment/moment-timezone-with-data-10-year-range.min.js" ></script>
 <!-- TimeSpan -->
 <script type="text/javascript" src="resources/libraries/TimeSpan.min.js"></script>
+<!--QR Code generator-->
+<script type="text/javascript" src="resources/plugins/qr-code/easy.qrcode.min.js"></script>
 <script src="resources/libraries/jClass.mini.js"></script>
 <script src="resources/app/languages.js"></script>
 <script src="resources/app/helper.js"></script>
