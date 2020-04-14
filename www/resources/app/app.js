@@ -87,7 +87,7 @@ let compiledTemplate = Template7.compile(htmlTemplate);
 $$('#app').append(compiledTemplate({RegisterUrl: API_URL.REGISTER}));
 
 // Init App
-var app = new Framework7({
+let app = new Framework7({
     id: 'com.sinopacific.phonetrack',
     root: '#app',
     name: 'ViCi',
@@ -142,12 +142,12 @@ var app = new Framework7({
 
 
 
-                    document.addEventListener("resume", function () {
+                   /* document.addEventListener("resume", function () {
                         AppEvents.emit('appResume');
                     }, false);
                     document.addEventListener("pause", function () {
                         AppEvents.emit('appPause');
-                    }, false);
+                    }, false);*/
                 }
 
 
@@ -297,9 +297,9 @@ var app = new Framework7({
         },
         login: function(){
             let self = this;
-            if(window.hasOwnProperty("cordova")){
+            /*if(window.hasOwnProperty("cordova")){
                 self.methods.setupPush();
-            }
+            }*/
             self.methods.getPlusInfo();
 
             let account = $$("input[name='username']");
