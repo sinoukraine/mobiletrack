@@ -4,7 +4,6 @@ window.COM_TIMEFORMAT3 = 'DD/MM/YYYY HH:mm:ss';
 window.COM_TIMEFORMAT4 = 'YYYY-MM-DD';
 
 const API_DOMIAN1 = "https://api.m2mglobaltech.com/";
-const API_DOMIAN2 = "https://vici19.quiktrak.co/";
 
 const API_DOMAIN3 = "https://app.phonetrack.co/";
 const API_DOMAIN4 = "https://maps.google.com/";
@@ -23,17 +22,7 @@ const API_DOMIAN9 = "https://upload.quiktrak.co/";*/
 
 const API_URL = {};
 
-API_URL.REGISTRATION = API_DOMIAN2 + 'Contact/Register';
-API_URL.PREREGISTRATION = API_DOMIAN2 + 'Contact/PreRegister';
-//API_URL.LOGIN = API_DOMIAN2 + 'Contact/Login';
-API_URL.LOGIN = API_DOMIAN2 + 'Contact/Login';
-API_URL.REFRESH_TOKEN = API_DOMIAN2 + 'Contact/Auth';
-//API_URL.UPLOAD_LINK = API_DOMIAN2 + 'Position/Upload';
-API_URL.UPLOAD_LINK = 'http://test.m2mdata.co:5000/' + 'Position/Upload';
-
-
-
-//API_URL.LOGIN = API_DOMIAN1 + 'QuikTrak/V1/User/Auth';
+API_URL.LOGIN = API_DOMIAN1 + 'QuikTrak/V1/User/Auth';
 API_URL.LOGOUT = API_DOMIAN1 + 'QuikTrak/V1/User/Logoff2';
 API_URL.EDIT_ACCOUNT = API_DOMIAN1 + 'QuikTrak/V1/User/Edit';
 API_URL.NEW_PASSWORD = API_DOMIAN1 + 'QuikTrak/V1/User/Password';
@@ -42,21 +31,15 @@ API_URL.VERIFY_BY_EMAIL = API_DOMIAN1 + "QuikProtect/V1/Client/VerifyCodeByEmail
 API_URL.FORGOT_PASSWORD = API_DOMIAN1 + "QuikProtect/V1/Client/ForgotPassword";
 
 API_URL.VERIFY_DEVICE = API_DOMIAN1 + 'Common/V1/Activation/Verify';
-//API_URL.UPLOAD_LINK = API_DOMIAN1 + 'QuikTrak/V1/Device/UploadGPS2';//http://194.247.12.103:5000/Position/Upload
-
+API_URL.UPLOAD_LINK = API_DOMIAN1 + 'QuikTrak/V1/Device/UploadGPS2';
 
 API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
-API_URL.ADD_NEW = API_DOMAIN3 + 'vici.activation/activate';
-//API_URL.REGISTER = API_DOMAIN3 + 'vici.activation/';
-API_URL.REGISTER = API_DOMAIN3 + 'vici.activation/register';
+API_URL.ADD_NEW = API_DOMAIN3 + 'activation/activate';
+API_URL.REGISTER = API_DOMAIN3 + 'activation/';
 
 API_URL.GET_ALL_POSITIONS = API_DOMIAN1 + "QuikTrak/V1/Device/GetPosInfos2";
 
-//API_URL.REFRESH_TOKEN = API_DOMIAN1 + "User/RefreshToken";
-
-API_URL.SET_COVID19_STATUS = API_DOMIAN1 + "PhoneProtect/V1/Client/SetNCoV19";
-API_URL.GET_COVID19_STATUS = API_DOMIAN1 + "PhoneProtect/V1/Client/GetNCoV19";
-
+API_URL.REFRESH_TOKEN = API_DOMIAN1 + "User/RefreshToken";
 
 //https://api.m2mglobaltech.com/QuikProtect/V1/Client/
 
@@ -90,10 +73,10 @@ $$('#app').append(compiledTemplate({RegisterUrl: API_URL.REGISTER}));
 let app = new Framework7({
     id: 'com.sinopacific.phonetrack',
     root: '#app',
-    name: 'ViCi',
+    name: 'PhoneTrack',
     theme: theme,
     view: {
-        stackPages: true,
+        //stackPages: true,
     },
     input: {
         scrollIntoViewOnFocus: true,
@@ -106,11 +89,8 @@ let app = new Framework7({
     },
     data: function () {
         return {
-            logoDialog: 'resources/images/logo.jpg',
+            logoDialog: 'resources/images/logo.png',
             MaxMapPopupWidth: 280,
-            UTCOFFSET: moment().utcOffset(),
-            Covid19Status: LANGUAGE.COM_MSG041, //untested
-            Covid19StatusType: 1,
         };
     },
     on: {
@@ -140,13 +120,11 @@ let app = new Framework7({
                     self.methods.setupPush();
                     self.methods.setGeolocationPlugin();
 
-
-
-                   /* document.addEventListener("resume", function () {
-                        AppEvents.emit('appResume');
+                    /*document.addEventListener("resume", function () {
+                        AppEvents.emit('resume');
                     }, false);
                     document.addEventListener("pause", function () {
-                        AppEvents.emit('appPause');
+                        AppEvents.emit('pause');
                     }, false);*/
                 }
 
@@ -226,18 +204,18 @@ let app = new Framework7({
                 if (!localStorage.PUSH_DEVICE_TOKEN)
                     localStorage.PUSH_DEVICE_TOKEN = uid;
                 //localStorage.PUSH_DEVICE_TOKEN = "75ba1639-92ae-0c4c-d423-4fad1e48a49d"
-                localStorage.PUSH_APPID_ID = 'android.app.quiktrak.eu.vici';
-                localStorage.DEVICE_TYPE = "android.app.quiktrak.eu.vici";
+                localStorage.PUSH_APPID_ID = 'android.app.quiktrak.eu.phonetrack';
+                localStorage.DEVICE_TYPE = "android.app.quiktrak.eu.phonetrack";
             }
         },
         clearUserInfo: function(){
             let self = this;
 
             let deviceToken = localStorage.PUSH_DEVICE_TOKEN;
-            //let mobileToken = localStorage.PUSH_MOBILE_TOKEN;
-            let notifications = self.methods.getFromStorage('notifications');
+            let mobileToken = localStorage.PUSH_MOBILE_TOKEN;
+            //let notifications = self.methods.getFromStorage('notifications');
             //let mapSettings = self.methods.getFromStorage('mapSettings');
-            //let trackingConfig = self.methods.getFromStorage('trackingConfig');
+            let trackingConfig = self.methods.getFromStorage('trackingConfig');
             let panicConfig = self.methods.getFromStorage('panicConfig');
             let emList = self.methods.getFromStorage('emergencyList');
 
@@ -253,16 +231,16 @@ let app = new Framework7({
             if (deviceToken) {
                 localStorage.PUSH_DEVICE_TOKEN = deviceToken;
             }
-            /*if (mobileToken) {
+            if (mobileToken) {
                 localStorage.PUSH_MOBILE_TOKEN = mobileToken;
-            }*/
+            }
 
-            /*if (UpdateAssetsPosInfoTimer) {
+            if (UpdateAssetsPosInfoTimer) {
                 clearInterval(UpdateAssetsPosInfoTimer);
-            }*/
-            /*if (!self.methods.isObjEmpty(trackingConfig)){
+            }
+            if (!self.methods.isObjEmpty(trackingConfig)){
                 self.methods.setInStorage({name:'trackingConfig', data:trackingConfig});
-            }*/
+            }
             if (!self.methods.isObjEmpty(panicConfig)){
                 self.methods.setInStorage({name:'panicConfig', data:panicConfig});
             }
@@ -271,7 +249,7 @@ let app = new Framework7({
             }
 
 
-            /*let data = {
+            let data = {
                 MinorToken: self.data.MinorToken,
                 deviceToken: deviceToken,
                 mobileToken: mobileToken,
@@ -279,7 +257,7 @@ let app = new Framework7({
             self.request.promise.get(API_URL.LOGOUT, data, 'json')
                 .then(function (result) {
                     //console.log(result);
-                });*/
+                });
             self.utils.nextTick(()=>{
                 AppEvents.emit('signedOut');
                 mainView.router.back('/',{force: true});
@@ -297,9 +275,6 @@ let app = new Framework7({
         },
         login: function(){
             let self = this;
-            /*if(window.hasOwnProperty("cordova")){
-                self.methods.setupPush();
-            }*/
             self.methods.getPlusInfo();
 
             let account = $$("input[name='username']");
@@ -307,39 +282,25 @@ let app = new Framework7({
 
             let data = {
                 //account: account.val() ? account.val() : localStorage.ACCOUNT,
-                PhoneNumber: account.val() ? account.val().replace('+', '').trim() : localStorage.ACCOUNT.replace('+', '').trim(),
-                Password: password.val() ? password.val() : localStorage.PASSWORD,
-                PushToken: localStorage.PUSH_DEVICE_TOKEN ? localStorage.PUSH_DEVICE_TOKEN : '',
-                /*appKey: localStorage.PUSH_APP_KEY ? localStorage.PUSH_APP_KEY : '',
+                username: account.val() ? account.val() : localStorage.ACCOUNT,
+                password: password.val() ? password.val() : localStorage.PASSWORD,
+                appKey: localStorage.PUSH_APP_KEY ? localStorage.PUSH_APP_KEY : '',
                 mobileToken: localStorage.PUSH_MOBILE_TOKEN ? localStorage.PUSH_MOBILE_TOKEN : '',
                 deviceToken: localStorage.PUSH_DEVICE_TOKEN ? localStorage.PUSH_DEVICE_TOKEN : '',
-                deviceType: localStorage.DEVICE_TYPE ? localStorage.DEVICE_TYPE : '',*/
+                deviceType: localStorage.DEVICE_TYPE ? localStorage.DEVICE_TYPE : '',
             };
 
-            //alert(JSON.stringify(data));
-
             self.dialog.progress();
-            self.request.promise.post(API_URL.LOGIN, data, 'json')
+            self.request.promise.get(API_URL.LOGIN, data, 'json')
                 .then(function (result) {
-                    //alert(JSON.stringify(result.data));
                     console.log(result.data);
-                    if(result.data && result.data.majorCode === '000') {
+                    if(result.data && result.data.MajorCode === '000') {
                         if(account.val()) {
                             localStorage.ACCOUNT = account.val().trim().toLowerCase();
                             localStorage.PASSWORD = password.val();
                         }
                         password.val(null);
-
-                        self.data.Token = result.data.data.Token;
-
                         self.methods.setInStorage({
-                            name: 'userInfo',
-                            data:  result.data.data
-                        });
-
-                        AppEvents.emit('signedIn', result.data.data);
-
-                        /*self.methods.setInStorage({
                             name: 'userInfo',
                             data:  result.data.Data.User
                         });
@@ -352,17 +313,16 @@ let app = new Framework7({
 
                         UpdateAssetsPosInfoTimer = setInterval(function(){
                             self.methods.getAssetListPosInfo(assetListObj, 1);  // '1' - means update
-                        }, 30*1000);*/
+                        }, 30*1000);
 
                         self.utils.nextFrame(()=>{
-                            //self.methods.getAssetListPosInfo(assetListObj);
+                            self.methods.getAssetListPosInfo(assetListObj);
                             self.loginScreen.close();
                         });
 
                         self.utils.nextFrame(()=>{
                             self.loginScreen.close();
                             self.dialog.close();
-                            self.dialog.alert(localStorage.PUSH_DEVICE_TOKEN);
                         });
 
                     }else {
@@ -384,9 +344,6 @@ let app = new Framework7({
                     }
                     window.loginDone = 1;
                 });
-        },
-        afterLogin: function(data){
-
         },
         getFromStorage: function(name){
             let ret = [];
@@ -420,13 +377,6 @@ let app = new Framework7({
 
                     case 'emergencyList':
                         str = localStorage.getItem("COM.QUIKTRAK.PHONETRACK.EMERGENCYLIST");
-                        if(str) {
-                            ret = JSON.parse(str);
-                        }
-                        break;
-
-                    case 'notifications':
-                        str = localStorage.getItem("COM.QUIKTRAK.PHONETRACK.NOTIFICATIONS");
                         if(str) {
                             ret = JSON.parse(str);
                         }
@@ -467,9 +417,6 @@ let app = new Framework7({
                     case 'emergencyList':
                         localStorage.setItem("COM.QUIKTRAK.PHONETRACK.EMERGENCYLIST", JSON.stringify(params.data));
                         break;
-                    case 'notifications':
-                        localStorage.setItem("COM.QUIKTRAK.PHONETRACK.NOTIFICATIONS", JSON.stringify(params.data));
-                        break;
 
                     default:
                         self.dialog.alert('There is no function associated with this name - '+params.name);
@@ -503,7 +450,6 @@ let app = new Framework7({
         customDialog: function(params){
             let self = this;
             let modalTex = '';
-            let buttons = !params.buttons ? [{ text: LANGUAGE.COM_MSG017 }] : params.buttons;
             if (params.title) {
                 modalTex += '<div class="custom-modal-title text-color-red">'+ params.title +'</div>';
             }
@@ -513,8 +459,11 @@ let app = new Framework7({
             self.dialog.create({
                 title: '<div class="custom-modal-logo-wrapper"><img class="custom-modal-logo" src="'+ self.data.logoDialog +'" alt=""/></div>',
                 text: modalTex,
-                verticalButtons: buttons.length > 2,
-                buttons: buttons
+                buttons: [
+                    {
+                        text: LANGUAGE.COM_MSG017,
+                    },
+                ]
             }).open();
         },
 
@@ -796,36 +745,6 @@ let app = new Framework7({
             window.open('tel:'+phone, '_system');
         },
 
-        getNewData: function(noPosInfoUpdate = false, emitDataUpdated = false){
-            let self = this;
-            self.methods.getPlusInfo();
-
-            let data = {
-                account: localStorage.ACCOUNT,
-                password: localStorage.PASSWORD,
-
-                appKey: localStorage.PUSH_APP_KEY,
-                mobileToken: localStorage.PUSH_MOBILE_TOKEN,
-                deviceToken: localStorage.PUSH_DEVICE_TOKEN,
-                deviceType: localStorage.DEVICE_TYPE,
-            };
-
-            self.request.promise.get(API_URL.LOGIN, data, 'json')
-                .then(function (result) {
-                    if(result.data && result.data.MajorCode === '000') {
-                        self.methods.setInStorage({
-                            name: 'userInfo',
-                            data:  result.data.Data.User
-                        });
-                        self.data.MinorToken = result.data.Data.MinorToken;
-                        self.data.MajorToken = result.data.Data.MajorToken;
-                    }
-                })
-                .catch(function (err) {
-                    console.log(err);
-
-                });
-        },
         setGeolocationPlugin: function(){
             if(!window.BackgroundGeolocation){
                 return;
@@ -834,7 +753,7 @@ let app = new Framework7({
             bgGeo = window.BackgroundGeolocation;
             let self = this;
 
-            //let savedConfig = self.methods.getFromStorage('trackingConfig'); //trackerGetSavedConfig();
+            let savedConfig = self.methods.getFromStorage('trackingConfig'); //trackerGetSavedConfig();
             let config = {
                 //reset: true,
                 reset: false,
@@ -923,7 +842,7 @@ let app = new Framework7({
 
             push.on('error', function(e) {
                 //console.log("push error = " + e.message);
-                // alert("push error = " + JSON.stringify(e));
+               // alert("push error = " + JSON.stringify(e));
                 alert("push error = " + e.message);
             });
 
@@ -1000,28 +919,7 @@ let app = new Framework7({
         refreshToken: function(newDeviceToken) {
             let self = this;
 
-            if (self.data.Token && newDeviceToken && localStorage.ACCOUNT && localStorage.PASSWORD) {
-                let data = {
-                    Token: self.data.Token,
-                    PushToken: newDeviceToken,
-                    PhoneNumber: localStorage.ACCOUNT,
-                    Password: localStorage.PASSWORD
-                };
-                self.request.promise.post(API_URL.REFRESH_TOKEN, data, 'json')
-                    .then(function (result) {
-                        if(result.data.MajorCode === '000') {
-
-                        }
-                    })
-                    .catch(function (err) {
-                        console.log(err);
-                    });
-            } else {
-                console.log('not loggined');
-            }
-        },
-
-           /* if (localStorage.PUSH_MOBILE_TOKEN && self.data.MajorToken && self.data.MinorToken && newDeviceToken) {
+            if (localStorage.PUSH_MOBILE_TOKEN && self.data.MajorToken && self.data.MinorToken && newDeviceToken) {
                 let data = {
                     MajorToken: self.data.MajorToken,
                     MinorToken: self.data.MinorToken,
@@ -1039,8 +937,8 @@ let app = new Framework7({
                     });
             } else {
                 console.log('not loggined');
-            }*/
-
+            }
+        },
         /*
           This method prevents back button tap to exit from app on android.
           In case there is an opened modal it will close that modal instead.
@@ -1203,7 +1101,21 @@ let SMSHelper = {
                 intent: '' // send SMS without opening any other app
             }
         };
+//alert(window.permissions.SEND_SMS);
+        sms.hasPermission(function (hasPermission) {
+            alert(hasPermission);
+            if (!hasPermission){
+                sms.requestPermission(function() {
+                    alert('[OK] Permission accepted')
+                }, function(error) {
+                    alert('[WARN] Permission not accepted')
+                    // Handle permission not accepted
+                })
+            }
 
+        }, function (e) {
+            alert('Something went wrong:' + e);
+        });
         sms.send(data.number, data.message, options, function () {
             app.methods.customNotification({text: LANGUAGE.PROMPT_MSG027});
             if (data.callback instanceof Function) {
