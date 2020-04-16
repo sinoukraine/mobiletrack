@@ -8,9 +8,9 @@
 	xmlns:cdv="http://cordova.apache.org/ns/1.0"  	
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	defaultlocale="en-US">
-    <name>Vici</name>
+    <name>PhoneTrack</name>
     <description>
-        Vici gps tracking app
+        PhoneTrack gps tracking app
     </description>
     <author email="support@phonegap.com" href="http://quiktrak.com.au">
         M2M Global Technology Limited
