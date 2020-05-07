@@ -2,8 +2,8 @@
 <widget 
 	id="com.sinopacific.phonetrack" 
 	version="1.0.1"
-	android-versionCode="27"
-    ios-CFBundleVersion="27"
+	android-versionCode="28"
+    ios-CFBundleVersion="28"
 	xmlns="http://www.w3.org/ns/widgets" 
 	xmlns:cdv="http://cordova.apache.org/ns/1.0"  	
 	xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,6 +17,7 @@
     </author>
     <content src="index.html" />
     <access origin="*"  allows-arbitrary-loads-for-media='true' allows-arbitrary-loads-in-web-content='true' allows-local-networking='true' />
+    <allow-navigation href="http://localhost:8080/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -32,13 +33,10 @@
     </platform>
     
 
-
     <platform name="android"> 
         <edit-config target="/manifest/application" file="app/src/main/AndroidManifest.xml" mode="merge" >
             <application android:usesCleartextTraffic="true" />
         </edit-config>   
-
-
         <!-- background-geolocation -->
        <config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
            <meta-data
@@ -47,32 +45,55 @@
        </config-file>
         <!-- /background-geolocation -->	  	       	  	
 	</platform>
-
 	<!-- sms plugin -->        
    <!--  <config-file platform="android" target="AndroidManifest.xml" parent="/manifest" mode="add" > 
        <uses-permission android:name="android.permission.SEND_SMS" />            
    </config-file> -->
     <!-- /sms plugin -->
 
+	<platform name="ios">
+        <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
+            <string>You can take a photo of your asset using camera and upload it into the app</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
+            <string>You can select photo of your asset in your photo library and upload it into the app</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+            <string>Need location access to find things nearby</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryAddUsageDescription">
+            <string>Need photo library access to save pictures there</string>
+        </edit-config>
+        <config-file parent="NSLocationAlwaysAndWhenInUseUsageDescription" target="*-Info.plist">
+            <string>Background location tracking is required for our app to get phone location when user turn it on</string>
+        </config-file>
+        <config-file parent="NSLocationAlwaysUsageDescription" target="*-Info.plist">
+            <string>Background location tracking is required for our app to get phone location when user turn it on</string>
+        </config-file>
+        <config-file parent="NSMotionUsageDescription" target="*-Info.plist">
+            <string>Device motion updates help determine when the device is stationary so the app can save power by turning off location-updates</string>
+        </config-file>
+    </platform>
+
+    <platform name="ios">
+        <preference name="WKWebViewOnly" value="true" />
+        <feature name="CDVWKWebViewEngine">
+            <param name="ios-package" value="CDVWKWebViewEngine" />
+        </feature>
+        <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
+    </platform>
+
 
 	<preference name="android-build-tool" value="gradle" />
-	<preference name="load-url-timeout" value="140000" />
+	<preference name="loadUrlTimeoutValue" value="700000" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="Orientation" value="portrait" />
     <preference name="android-minSdkVersion" value="21" />
     <preference name="android-targetSdkVersion" value="28" />
     <preference name="deployment-target" value="10.2" />
     <preference name="StatusBarOverlaysWebView" value="false" />
-  <!--   <preference name="StatusBarBackgroundColor" value="#ee6e73" /> -->
     <preference name="StatusBarStyle" value="blacktranslucent" />
-    <preference name="phonegap-version" value="cli-9.0.0" />  
-	    
-	
-	
-  <!--     <plugin name="phonegap-plugin-push" source="npm" spec="2.3.0"> 
-          <variable name="SENDER_ID" value="1097482483564" /> 
-  </plugin> -->
-  
+    <preference name="phonegap-version" value="cli-9.0.0" />    
 	          
    
     <platform name="android">
@@ -82,69 +103,31 @@
       <resource-file src="GoogleService-Info.plist" />
     </platform>
     <!-- android -->
-    <!-- <plugin name="cordova-background-geolocation-lt" spec="3.6.3" source="npm"> </plugin> -->
+    <plugin name="cordova-background-geolocation-lt" spec="3.6.3" source="npm"> </plugin>
      <!-- ios -->
-    <plugin name="cordova-background-geolocation-lt" spec="3.4.2" source="npm"> </plugin>
+    <!-- <plugin name="cordova-background-geolocation-lt" spec="3.4.2" source="npm"> </plugin> -->
 
-    <!-- <plugin name="cordova-plugin-console" source="npm" spec="1.0.7" /> -->
-    <plugin name="cordova-plugin-statusbar" source="npm" spec="2.1.3" />  
-    <plugin name="cordova-plugin-device" source="npm" spec="2.0.3" />
-    <plugin name="cordova-plugin-dialogs" source="npm" spec="1.2.1" />
-    <plugin name="cordova-plugin-whitelist" source="npm" spec="1.2.1" />
-    <plugin name="cordova-plugin-buildinfo" source="npm" spec="4.0.0" />
-    <plugin name="cordova-plugin-splashscreen" source="npm" spec="5.0.2" />
-    <plugin name="cordova-plugin-camera" source="npm" spec="4.0.3"  />
-    <plugin spec="https://github.com/phonegap/phonegap-mobile-accessibility.git" source="git" />
-    <plugin name="cordova-launch-review" source="npm" spec="3.1.1" />
-    <plugin name="cordova-plugin-inappbrowser" source="npm" spec="3.2.0"  />
+    <plugin name="cordova-plugin-whitelist" spec="1.3.4" />
+    <plugin name="cordova-plugin-statusbar" source="npm" spec="~2.1.3" />  
+    <plugin name="cordova-plugin-device" source="npm" spec="~2.0.1" />
+    <plugin name="cordova-plugin-buildinfo" source="npm" spec="~4.0.0" />
+    <plugin name="cordova-plugin-splashscreen" source="npm" spec="~5.0.2" />    
+    <plugin spec="phonegap-plugin-mobile-accessibility" spec="~1.0.5" /> 
 
-   	<!-- <plugin name="cordova-plugin-sim" source="npm" spec="1.3.3" /> -->
-    <!-- <plugin name="cordova-sim-plugin" source="npm" spec="0.0.1" /> -->
-
-    <!-- <plugin source="git" spec="https://github.com/cordova-sms/cordova-sms-plugin.git" /> -->
-     <plugin name="cordova-sms-plugin" source="npm" spec="1.0.0" />
-    
+    <!--    <plugin name="cordova-plugin-wkwebview-engine" spec="~1.2.1" />-->
+    <plugin name="cordova-plugin-wkwebview-file-xhr" spec="~2.1.4"/>
+    <plugin name="cordova-sms-plugin" source="npm" spec="1.0.0" />    
 	<plugin name="cordova-plugin-android-permissions" source="npm" spec="1.0.2" />
-
 	<plugin name="cordova-plugin-x-socialsharing" source="npm" spec="5.6.4"/>
 
+	<!--<plugin name="phonegap-plugin-push" source="npm" spec="2.3.0"> 
+        <variable name="SENDER_ID" value="1097482483564" /> 
+  	</plugin> -->
     <!-- fix to install new tracking plugin verion 3.6.3 and to get push registration id -->
     <!-- <plugin name="cordova-support-google-services" source="npm" spec="1.4.0"/>
     <plugin name="cordova-android-play-services-gradle-release" spec="3.0.0">        
         <variable name="play-services-location" value="15.0.1" />    
-    </plugin> -->
-    
-  
-
-   
-    <platform name="ios">
-        <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
-            <string>You can take a photo of your asset using camera and upload it into the app</string>
-        </edit-config>
-        <edit-config target="NSPhotoLibraryUsageDescription" file="*-Info.plist" mode="merge">
-            <string>You can select photo of your asset in your photo library and upload it into the app</string>
-        </edit-config>
-        <edit-config target="NSLocationWhenInUseUsageDescription" file="*-Info.plist" mode="merge">
-            <string>Need location access to find things nearby</string>
-        </edit-config>
-        <edit-config target="NSPhotoLibraryAddUsageDescription" file="*-Info.plist" mode="merge">
-            <string>Need photo library access to save pictures there</string>
-        </edit-config>
-
-        <!-- background-geolocation -->
-        <config-file parent="NSLocationAlwaysAndWhenInUseUsageDescription" target="*-Info.plist">
-            <string>Background location tracking is required for our app to get phone location when user turn it on</string>
-        </config-file>
-        <config-file parent="NSLocationAlwaysUsageDescription" target="*-Info.plist">
-            <string>Background location tracking is required for our app to get phone location when user turn it on</string>
-        </config-file>      
-        <config-file parent="NSMotionUsageDescription" target="*-Info.plist">
-            <string>Device motion updates help determine when the device is stationary so the app can save power by turning off location-updates</string>
-        </config-file>
-        <!-- /background-geolocation -->
-    </platform>
-   
-
+    </plugin> -->      
 
     <platform name="android">
         <icon density="ldpi" src="www/res/icon/android/drawable-ldpi-icon.png" />
@@ -186,10 +169,5 @@
         <splash height="480" platform="ios" src="www/res/screen/ios/Default~iphone.png" width="320" />
     </platform>
     <splash src="splash.png" />
-    <icon src="icon.png" />
-
-
-    
-
-    
+    <icon src="icon.png" />       
 </widget>
