@@ -112,7 +112,7 @@
     <plugin name="cordova-plugin-device" source="npm" spec="~2.0.1" />
     <plugin name="cordova-plugin-buildinfo" source="npm" spec="~4.0.0" />
     <plugin name="cordova-plugin-splashscreen" source="npm" spec="~5.0.2" />    
-    <plugin spec="phonegap-plugin-mobile-accessibility" spec="~1.0.5" /> 
+    <plugin name="phonegap-plugin-mobile-accessibility" spec="~1.0.5" /> 
 
     <!--    <plugin name="cordova-plugin-wkwebview-engine" spec="~1.2.1" />-->
     <plugin name="cordova-plugin-wkwebview-file-xhr" spec="~2.1.4"/>
