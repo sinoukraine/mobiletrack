@@ -5,6 +5,7 @@ window.COM_TIMEFORMAT4 = 'YYYY-MM-DD';
 
 const API_DOMIAN1 = "https://api.m2mglobaltech.com/";
 
+const API_DOMAIN3 = "https://app.phonetrack.co/";
 const API_DOMAIN4 = "https://maps.google.com/";
 const API_DOMIAN7 = "https://nominatim.sinopacific.com.ua/";
 const API_DOMIAN8 = "https://nominatim.openstreetmap.org/";
@@ -20,31 +21,40 @@ const API_DOMIAN8 = "https://nominatim.openstreetmap.org/";
 const API_DOMIAN9 = "https://upload.quiktrak.co/";*/
 
 const API_URL = {};
-//API_URL.LOGIN = API_DOMIAN1 + 'QuikProtect/V1/Client/Auth';
-//API_URL.LOGOUT = API_DOMIAN1 + 'QuikProtect/V1/Client/Logoff';
-//API_URL.EDIT_ACCOUNT = API_DOMIAN1 + 'QuikProtect/V1/Client/AccountEdit';
+
 API_URL.LOGIN = API_DOMIAN1 + 'QuikTrak/V1/User/Auth';
 API_URL.LOGOUT = API_DOMIAN1 + 'QuikTrak/V1/User/Logoff2';
 API_URL.EDIT_ACCOUNT = API_DOMIAN1 + 'QuikTrak/V1/User/Edit';
 API_URL.NEW_PASSWORD = API_DOMIAN1 + 'QuikTrak/V1/User/Password';
 
+API_URL.VERIFY_BY_EMAIL = API_DOMIAN1 + "QuikProtect/V1/Client/VerifyCodeByEmail";
+API_URL.FORGOT_PASSWORD = API_DOMIAN1 + "QuikProtect/V1/Client/ForgotPassword";
+
 API_URL.VERIFY_DEVICE = API_DOMIAN1 + 'Common/V1/Activation/Verify';
 API_URL.UPLOAD_LINK = API_DOMIAN1 + 'QuikTrak/V1/Device/UploadGPS2';
 
 API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
+API_URL.ADD_NEW = API_DOMAIN3 + 'activation/activate';
+API_URL.REGISTER = API_DOMAIN3 + 'activation/';
 
-//API_URL.URL_GET_LOGIN = API_DOMIAN1 + "User/Auth?username={0}&password={1}&appKey={2}&mobileToken={3}&deviceToken={4}&deviceType={5}";
-//API_URL.URL_GET_LOGOUT = API_DOMIAN1 + "User/Logoff2?mobileToken={0}&deviceToken={1}";
-//API_URL.URL_EDIT_ACCOUNT = API_DOMIAN1 + "AccountEdit?MajorToken={0}&MinorToken={1}&firstName={2}&surName={3}&mobile={4}&email={5}&address0={6}&address1={7}&address2={8}&address3={9}&address4={10}";
-//API_URL.URL_NEW_PASSWORD = API_DOMIAN3 + "User/Password?MinorToken={0}&oldpwd={1}&newpwd={2}";
+API_URL.GET_ALL_POSITIONS = API_DOMIAN1 + "QuikTrak/V1/Device/GetPosInfos2";
+
+API_URL.REFRESH_TOKEN = API_DOMIAN1 + "User/RefreshToken";
+
+//https://api.m2mglobaltech.com/QuikProtect/V1/Client/
 
 Framework7.request.setup({
     timeout: 40*1000
 });
 
-const LoginEvents = new Framework7.Events();
+const AppEvents = new Framework7.Events();
+//const AppEvents = new Framework7.Events();
+//const AssetUpdateEvents = new Framework7.Events();
 
 let bgGeo;
+let UpdateAssetsPosInfoTimer = false;
+let POSINFOASSETLIST = {};
+let push;
 // Dom7
 let $$ = Dom7;
 
@@ -56,7 +66,8 @@ if (Framework7.device.ios) {
 
 let htmlTemplate = $$('script#loginScreenTemplate').html();
 let compiledTemplate = Template7.compile(htmlTemplate);
-$$('#app').append(compiledTemplate());
+//let withContext = compiledTemplate(dealerData);
+$$('#app').append(compiledTemplate({RegisterUrl: API_URL.REGISTER}));
 
 // Init App
 let app = new Framework7({
@@ -65,7 +76,7 @@ let app = new Framework7({
     name: 'PhoneTrack',
     theme: theme,
     view: {
-        stackPages: true,
+        //stackPages: true,
     },
     input: {
         scrollIntoViewOnFocus: true,
@@ -79,6 +90,7 @@ let app = new Framework7({
     data: function () {
         return {
             logoDialog: 'resources/images/logo.png',
+            MaxMapPopupWidth: 280,
         };
     },
     on: {
@@ -92,7 +104,9 @@ let app = new Framework7({
             let self = this;
 
                 if(window.hasOwnProperty("cordova")){
-                    window.permissions = cordova.plugins.permissions;
+                    if(cordova.plugins && cordova.plugins.permissions){
+                        window.permissions = cordova.plugins.permissions;
+                    }
 
                     //fix app images and text size
                     if (window.MobileAccessibility) {
@@ -105,11 +119,15 @@ let app = new Framework7({
                     self.methods.handleAndroidBackButton();
                     self.methods.handleKeyboard();
 
-
+                    //self.methods.setupPush();
                     self.methods.setGeolocationPlugin();
-                    //self.methods.checkTelephonyPermissions();
 
-                    //checkTelephonyPermissions();
+                    /*document.addEventListener("resume", function () {
+                        AppEvents.emit('resume');
+                    }, false);
+                    document.addEventListener("pause", function () {
+                        AppEvents.emit('pause');
+                    }, false);*/
                 }
 
 
@@ -219,7 +237,9 @@ let app = new Framework7({
                 localStorage.PUSH_MOBILE_TOKEN = mobileToken;
             }
 
-
+            if (UpdateAssetsPosInfoTimer) {
+                clearInterval(UpdateAssetsPosInfoTimer);
+            }
             if (!self.methods.isObjEmpty(trackingConfig)){
                 self.methods.setInStorage({name:'trackingConfig', data:trackingConfig});
             }
@@ -241,7 +261,7 @@ let app = new Framework7({
                     //console.log(result);
                 });
             self.utils.nextTick(()=>{
-                LoginEvents.emit('signedOut');
+                AppEvents.emit('signedOut');
                 mainView.router.back('/',{force: true});
             }, 1000);
         },
@@ -289,7 +309,18 @@ let app = new Framework7({
                         self.data.MinorToken = result.data.Data.MinorToken;
                         self.data.MajorToken = result.data.Data.MajorToken;
 
-                        LoginEvents.emit('signedIn', result.data.Data.User);
+                        let assetListObj = self.methods.setAssetList({list: result.data.Data.Devices});
+
+                        AppEvents.emit('signedIn', result.data.Data.User);
+
+                        UpdateAssetsPosInfoTimer = setInterval(function(){
+                            self.methods.getAssetListPosInfo(assetListObj, 1);  // '1' - means update
+                        }, 30*1000);
+
+                        self.utils.nextFrame(()=>{
+                            self.methods.getAssetListPosInfo(assetListObj);
+                            self.loginScreen.close();
+                        });
 
                         self.utils.nextFrame(()=>{
                             self.loginScreen.close();
@@ -400,9 +431,6 @@ let app = new Framework7({
         customNotification: function(params){
             let self = this;
             self.notification.create({
-
-
-                //icon: '<img src="'+self.data.AppDetails.favicon+'" class="icon-notification" alt="" />',
                 title: self.name,
                 //titleRightText: 'now',
                 subtitle: params.title ? params.title : '',
@@ -412,7 +440,10 @@ let app = new Framework7({
                 //closeButton: true,
                 on: {
                     close: function (notification) {
-                        notification.$el.remove();
+                        //notification.$el.remove();
+                        if(params.callback instanceof Function){
+                            params.callback();
+                        }
                     }
                 },
 
@@ -436,6 +467,189 @@ let app = new Framework7({
                     },
                 ]
             }).open();
+        },
+
+        setAssetList: function(params={}){
+            let self = this;
+            let ret = '';
+
+            if (params.list && params.list.length) {
+                let ary = {};
+                for(let i = 0; i < params.list.length; i++) {
+                    let index = 0;
+                    ary[params.list[i][1]] = {
+                        Id: params.list[i][index++],
+                        IMEI: params.list[i][index++],
+                        Name: params.list[i][index++],
+                        TagName: params.list[i][index++],
+                        Icon: params.list[i][index++],
+                        Unit: params.list[i][index++],
+                        InitMileage: params.list[i][index++],
+                        InitAcconHours: params.list[i][index++],
+                        State: params.list[i][index++],
+                        ActivateDate: params.list[i][index++],
+                        PRDTName: params.list[i][index++],
+                        PRDTFeatures: params.list[i][index++],
+                        PRDTAlerts: params.list[i][index++],
+                        Describe1: params.list[i][index++],
+                        Describe2: params.list[i][index++],
+                        Describe3: params.list[i][index++],
+                        Describe4: params.list[i][index++],
+                        Describe5: params.list[i][index++],
+                        _FIELD_FLOAT1: params.list[i][index++],
+                        _FIELD_FLOAT2: params.list[i][index++],
+                        _FIELD_FLOAT7: params.list[i][index++],
+                        Describe7: params.list[i][index++],
+                        AlarmOptions: params.list[i][index++],
+                        _FIELD_FLOAT8: params.list[i][index++],
+                        StatusNew: params.list[i][index++],
+                        _FIELD_INT2: params.list[i][index++],
+                        GroupCode: params.list[i][index++],
+                        Registration: params.list[i][index++],
+                        StockNumber: params.list[i][index++],
+                        MaxSpeed: params.list[i][index++],
+                        MaxSpeedAlertMode: params.list[i][index++],
+                    };
+                    if (POSINFOASSETLIST && POSINFOASSETLIST[params.list[i][1]]) {
+                        POSINFOASSETLIST[params.list[i][1]].StatusNew =  ary[params.list[i][1]].StatusNew;
+                    }
+                }
+                ret = ary;
+                localStorage.setItem("COM.QUIKTRAK.PHONETRACK.ASSETLIST", JSON.stringify(ary));
+            }else if(params.device){
+                let list = self.methods.getFromStorage('assetList');
+
+                if (POSINFOASSETLIST[params.device.IMEI]) {
+                    POSINFOASSETLIST[params.device.IMEI].Name = list[params.device.IMEI].Name = params.device.name;
+                    POSINFOASSETLIST[params.device.IMEI].TagName = list[params.device.IMEI].TagName = params.device.tag;
+                    POSINFOASSETLIST[params.device.IMEI].Registration = list[params.device.IMEI].Registration = params.device.registration;
+                    POSINFOASSETLIST[params.device.IMEI].Unit = list[params.device.IMEI].Unit = params.device.speedUnit;
+                    POSINFOASSETLIST[params.device.IMEI].InitMileage = list[params.device.IMEI].InitMileage = params.device.initMileage;
+                    POSINFOASSETLIST[params.device.IMEI].InitAcconHours = list[params.device.IMEI].InitAcconHours = params.device.initAccHours;
+                    POSINFOASSETLIST[params.device.IMEI].Describe1 = list[params.device.IMEI].Describe1 = params.device.attr1;
+                    POSINFOASSETLIST[params.device.IMEI].Describe2 = list[params.device.IMEI].Describe2 = params.device.attr2;
+                    POSINFOASSETLIST[params.device.IMEI].Describe3 = list[params.device.IMEI].Describe3 = params.device.attr3;
+                    POSINFOASSETLIST[params.device.IMEI].Describe4 = list[params.device.IMEI].Describe4 = params.device.attr4;
+                    POSINFOASSETLIST[params.device.IMEI].GroupCode = list[params.device.IMEI].GroupCode = params.device.groupCode;
+
+                    if (params.device.stockNumber) {
+                        POSINFOASSETLIST[params.device.IMEI].StockNumber = list[params.device.IMEI].StockNumber = params.device.stockNumber;
+                    }
+                    if (params.device.icon) {
+                        POSINFOASSETLIST[params.device.IMEI].Icon = list[params.device.IMEI].Icon = params.device.icon;
+                    }
+                    if (params.device.MaxSpeed) {
+                        POSINFOASSETLIST[params.device.IMEI].MaxSpeed = list[params.device.IMEI].MaxSpeed = params.device.MaxSpeed;
+                    }
+
+
+                    ret = list[params.device.IMEI];
+                }else{
+                    list[params.device.IMEI].Name = params.device.name;
+                    list[params.device.IMEI].TagName = params.device.tag;
+                    list[params.device.IMEI].Registration = params.device.registration;
+                    list[params.device.IMEI].Unit = params.device.speedUnit;
+                    list[params.device.IMEI].InitMileage = params.device.initMileage;
+                    list[params.device.IMEI].InitAcconHours = params.device.initAccHours;
+                    list[params.device.IMEI].Describe1 = params.device.attr1;
+                    list[params.device.IMEI].Describe2 = params.device.attr2;
+                    list[params.device.IMEI].Describe3 = params.device.attr3;
+                    list[params.device.IMEI].Describe4 = params.device.attr4;
+                    list[params.device.IMEI].GroupCode = params.device.groupCode;
+
+                    if (params.device.stockNumber) {
+                        list[params.device.IMEI].StockNumber = params.device.stockNumber;
+                    }
+                    if (params.device.icon) {
+                        list[params.device.IMEI].Icon = params.device.icon;
+                    }
+                    if (params.device.MaxSpeed) {
+                        list[params.device.IMEI].MaxSpeed = params.device.MaxSpeed;
+                    }
+                }
+
+                localStorage.setItem("COM.QUIKTRAK.PHONETRACK.ASSETLIST", JSON.stringify(list));
+
+            }else if(params.objects){
+                localStorage.setItem("COM.QUIKTRAK.PHONETRACK.ASSETLIST", JSON.stringify(params.objects));
+            }
+
+            //console.log(ary);
+            return ret;
+        },
+        getAssetListPosInfo: function(listObj, update= false, callback = false){
+            let self = this;
+            //console.log(self)
+            let codes = '';
+            let keys = Object.keys(listObj);
+            let assetList = [];
+            for (const key of keys) {
+                codes += listObj[key].Id+',';
+                assetList.push(listObj[key]);
+            }
+            if (codes) {
+                codes = codes.slice(0, -1);
+            }
+
+
+            let url = self.utils.serializeObject({MinorToken: self.data.MinorToken, MajorToken: self.data.MajorToken});
+
+            url = API_URL.GET_ALL_POSITIONS + '?' + url;
+
+            let data = {
+                codes: codes,
+            };
+            self.request.promise.post(url, data, 'json')
+                .then(function (result) {
+                    if(result.data.MajorCode === '000') {
+                        if (!self.methods.isObjEmpty(result.data.Data)) {
+                            let posData = '';
+                            let imei = '';
+                            let protocolClass = '';
+                            let deviceInfo = '';
+
+                            if (!update) {
+                                for (let i = result.data.Data.length - 1; i >= 0; i--) {
+                                    posData = result.data.Data[i];
+                                    imei = posData[1];
+                                    protocolClass = posData[2];
+                                    deviceInfo = listObj[imei];
+
+                                    if (!self.methods.isObjEmpty(deviceInfo) && deviceInfo.IMEI === imei){
+                                        POSINFOASSETLIST[imei] = Protocol.ClassManager.get(protocolClass, deviceInfo);
+                                        POSINFOASSETLIST[imei].initPosInfo(posData);
+                                    }
+                                }
+                            }else{
+                                for (let i = result.data.Data.length - 1; i >= 0; i--) {
+                                    posData = result.data.Data[i];
+                                    imei = posData[1];
+
+                                    if (!self.methods.isObjEmpty(POSINFOASSETLIST[imei]) && !POSINFOASSETLIST[imei].posInfo.positionTime || !self.methods.isObjEmpty(POSINFOASSETLIST[imei]) && posData[5] >= POSINFOASSETLIST[imei].posInfo.positionTime._i ) {
+                                        POSINFOASSETLIST[imei].initPosInfo(posData);
+                                    }
+                                }
+                            }
+                            AppEvents.emit('positionUpdateReceived');
+                        }
+                    }
+                    /*if (!update) {
+                        self.dialog.close();
+                        AppEvents.emit('signedIn', assetList);
+                    }*/
+                    if (callback instanceof Function) {
+                        callback();
+                    }
+                })
+                .catch(function (err) {
+                    console.log(err);
+                    window.loginDone = 1;
+                    /*if (err && err.status === 404){
+                        self.dialog.alert(LANGUAGE.PROMPT_MSG002);
+                    }else{
+                        self.dialog.alert(LANGUAGE.PROMPT_MSG003);
+                    }*/
+                });
         },
 
         clickOnPanicButton: function () {
@@ -500,6 +714,7 @@ let app = new Framework7({
 
                 },function(errorCode){
                     self.progressbar.hide();
+                    self.methods.customDialog({text:errorCode});
                     let errorMsg = LANGUAGE.TRACKING_PLUGIN_MSG04;
                     switch (errorCode) {
                         case 0:
@@ -529,7 +744,7 @@ let app = new Framework7({
             }
         },
         callToPhone: function(phone){
-            window.open('tel:'+phone, '_blank');
+            window.open('tel:'+phone, '_system');
         },
 
         setGeolocationPlugin: function(){
@@ -554,10 +769,8 @@ let app = new Framework7({
                 //distanceFilter: 10,
                 allowIdenticalLocations: true,
                 distanceFilter: 0,
-                //locationUpdateInterval: localStorage.tracker_interval ? localStorage.tracker_interval : 60 * 1000,
-                //url: 'https://sinopacificukraine.com/test/phonetrack/locations.php',
                 url: API_URL.UPLOAD_LINK,
-                maxDaysToPersist: 3,
+                maxDaysToPersist: 5,
                 autoSync: true,
                 //autoSyncThreshold: 2,
                 batchSync: true,
@@ -570,21 +783,9 @@ let app = new Framework7({
                 scheduleUseAlarmManager: true,
             };
 
-            if  (savedConfig.IMEI){
-                config.params = {
-                    IMEI: savedConfig.IMEI
-                }
-            }
-            if  (savedConfig.Interval){
-                config.locationUpdateInterval = savedConfig.Interval;
-            }
-            if  (savedConfig.Schedule && savedConfig.Schedule.length){
-                config.schedule = savedConfig.Schedule;
-            }
-            console.log(bgGeo)
             // 2. Execute #ready method:
             bgGeo.ready(config, function(state) {    // <-- Current state provided to #configure callback
-                //alert(JSON.stringify(savedConfig));
+                /*self.dialog.alert(JSON.stringify(state));
                 if (savedConfig.ScheduleState && savedConfig.ScheduleState === true){
                     bgGeo.requestPermission().then((status) => {
                         bgGeo.startSchedule();
@@ -596,11 +797,149 @@ let app = new Framework7({
                     bgGeo.stopSchedule(function() {
                         bgGeo.stop();
                     });
-                }
+                }*/
             });
         },
-        checkTelephonyPermissions: function(){
+        setupPush: function() {
+            let self = this;
+            if(!window.PushNotification){
+                return;
+            }
+            push = PushNotification.init({
+                "android": {
+                    //"senderID": "264121929701"
+                    //icon: 'notification',
+                    //iconColor: 'blue'
+                },
+                "browser": {
+                    pushServiceURL: 'https://push.api.phonegap.com/v1/push'
+                },
+                "ios": {
+                    "sound": true,
+                    "vibration": true,
+                    "badge": true
+                },
+                "windows": {}
+            });
 
+            /*push.on('registration', function(data) {
+                alert('reg = ' + JSON.stringify(data));
+                console.log('registration event: ' + data.registrationId);
+                // alert('registered '+ data.registrationId);
+                /!*if (localStorage.PUSH_DEVICE_TOKEN !== data.registrationId) {
+                    // Save new registration ID
+                    localStorage.PUSH_DEVICE_TOKEN = data.registrationId;
+                    // Post registrationId to your app server as the value has changed
+                    setTimeout(function() {
+                        self.methods.refreshToken(data.registrationId);
+                        self.methods.getNewData(true);
+                    },1000);
+                }*!/
+            });*/
+
+            push.on('registration', data => {
+                self.dialog.alert(data.registrationId);
+                console.log(data.registrationType);
+            });
+
+            push.on('error', function(e) {
+                //console.log("push error = " + e.message);
+               // alert("push error = " + JSON.stringify(e));
+                alert("push error = " + e.message);
+            });
+
+            push.on('notification', function(data) {
+                alert(JSON.stringify(data));
+                /*if (localStorage.ACCOUNT && localStorage.PASSWORD) {
+                    //if user using app and push notification comes
+                    if (data && data.additionalData && data.additionalData.foreground) {
+                        // if application open, show popup
+                        let alertData = self.methods.formatNewNotifications([data.additionalData])[0];
+                        self.methods.displayNewNotificationArrived(alertData);
+                    } else if (data && data.additionalData && data.additionalData.payload) {
+                        //if user NOT using app and push notification comes
+                        self.preloader.show();
+                        window.loginTimer = setInterval(function() {
+                            if (window.loginDone) {
+                                clearInterval(window.loginTimer);
+                                setTimeout(function() {
+                                    let alertData = self.methods.formatNewNotifications([data.additionalData])[0];
+                                    if(mainView.router.currentRoute.name && mainView.router.currentRoute.name === 'notification'){
+                                        mainView.router.navigate('/notification/',{context: { AlertData: alertData }, reloadCurrent: true, ignoreCache: true, });
+                                    }else {
+                                        mainView.router.navigate('/notification/',{context: { AlertData: alertData } });
+                                    }
+
+                                    self.preloader.hide();
+                                }, 1000);
+                            }
+                        }, 1000);
+                    }
+                }*/
+
+                if (self.device && self.device && self.device.ios) {
+                    push.finish(
+                        () => {
+                            console.log('processing of push data is finished');
+                        },
+                        () => {
+                            console.log(
+                                'something went wrong with push.finish for ID =',
+                                data.additionalData.notId
+                            );
+                        },
+                        data.additionalData.notId
+                    );
+                }
+            });
+
+            if　 (!localStorage.ACCOUNT && push) {
+                push.clearAllNotifications(
+                    () => {
+                        console.log('success');
+                    },
+                    () => {
+                        console.log('error');
+                    }
+                );
+            }
+        },
+        unregisterPush: function(){
+            if(push){
+                push.unregister(
+                    () => {
+                        // alert('unregistered');
+                        console.log('success');
+                    },
+                    () => {
+                        // alert('fail to unregister');
+                        console.log('error');
+                    });
+            }
+
+        },
+        refreshToken: function(newDeviceToken) {
+            let self = this;
+
+            if (localStorage.PUSH_MOBILE_TOKEN && self.data.MajorToken && self.data.MinorToken && newDeviceToken) {
+                let data = {
+                    MajorToken: self.data.MajorToken,
+                    MinorToken: self.data.MinorToken,
+                    MobileToken: localStorage.PUSH_MOBILE_TOKEN,
+                    DeviceToken: newDeviceToken,
+                };
+                self.request.promise.post(API_URL.REFRESH_TOKEN, data, 'json')
+                    .then(function (result) {
+                        if(result.data.MajorCode === '000') {
+
+                        }
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                    });
+            } else {
+                console.log('not loggined');
+            }
         },
         /*
           This method prevents back button tap to exit from app on android.
@@ -646,11 +985,11 @@ let app = new Framework7({
                     e.preventDefault();
                     return false;
                 }
-                if ($('.login-screen.modal-in').length) {
+               /* if ($('.login-screen.modal-in').length) {
                     f7.loginScreen.close('.login-screen.modal-in');
                     e.preventDefault();
                     return false;
-                }
+                }*/
 
                 if($('.searchbar-enabled').length){
                     f7.searchbar.disable();
@@ -672,7 +1011,7 @@ let app = new Framework7({
                 }
 
                 if (currentView && currentView.router && currentView.router.url === '/') {
-                    f7.dialog.confirm(LANGUAGE.PROMPT_MSG044, function() {
+                    f7.dialog.confirm(LANGUAGE.PROMPT_MSG021, function() {
                         if(navigator){
                             navigator.app.exitApp();
                         }
@@ -753,6 +1092,81 @@ let mainView = app.views.create('.view-main', {
     url: '/',
     name: 'view-main'
 });
+
+let SMSHelper = {
+    sendSms: function(data) {
+        //CONFIGURATION
+        let options = {
+            replaceLineBreaks: false, // true to replace \n by a new line, false by default
+            android: {
+                intent: 'INTENT'  // send SMS with the native android SMS messaging
+                //intent: '' // send SMS without opening any other app
+            }
+        };
+//alert(window.permissions.SEND_SMS);
+        sms.hasPermission(function (hasPermission) {
+            alert(hasPermission);
+            if (!hasPermission){
+                sms.requestPermission(function() {
+                    alert('[OK] Permission accepted')
+                }, function(error) {
+                    alert('[WARN] Permission not accepted')
+                    // Handle permission not accepted
+                })
+            }
+
+        }, function (e) {
+            alert('Something went wrong:' + e);
+        });
+        sms.send(data.number, data.message, options, function () {
+            app.methods.customNotification({text: LANGUAGE.PROMPT_MSG027});
+            if (data.callback instanceof Function) {
+                data.callback();
+            }
+
+        }, function (e) {
+            alert('Message Failed:' + e);
+            if (data.callback instanceof Function) {
+                data.callback();
+            }
+        });
+    },
+    checkSMSPermission: function(data=false) {
+        let self = this;
+
+        let success = function (status) {
+            if (status.hasPermission) {
+                if(data){
+                    self.sendSms(data);
+                }
+            }
+            else {
+                self.requestSMSPermission(data, self.sendSms);
+            }
+        };
+        let error = function (e) { alert('Something went wrong:' + e); };
+        window.permissions.hasPermission(window.permissions.SEND_SMS, success, error);
+    },
+    requestSMSPermission: function(data=false, callback) {
+        let self = this;
+
+        let success = function (status) {
+            if ( !status.hasPermission ) {
+                window.permissions.requestPermission(window.permissions.SEND_SMS, function() {
+                    //alert('[OK] Permission accepted');
+                    if (data){
+                        callback(data);
+                    }
+                }, function(error) {
+                    alert('[WARN] Permission not accepted')
+                    // Handle permission not accepted
+                });
+            }
+        };
+        let error = function (e) { alert('Something went wrong:' + e); };
+        window.permissions.hasPermission(window.permissions.SEND_SMS, success, error);
+    }
+};
 
 $$('body').on('submit', '[name="login-form"]', function (e) {
     e.preventDefault();

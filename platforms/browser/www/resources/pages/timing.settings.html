@@ -13,6 +13,9 @@
                 </div>
                 <div class="title sliding">{{@global.LANGUAGE.TIMING_MSG00}}</div>
                 <div class="right">
+                    <!--<a href="/share/?imei=" class="link icon-only">
+                        <i class="f7-icons icon-share"></i>
+                    </a>-->
                     <label for="submit-form-timing" class="link icon-only">
                         <i class="f7-icons icon-apply"></i>
                     </label>
@@ -22,6 +25,8 @@
 
 
         <form name="FormTiming" class="page-content" >
+            <input type="submit" id="submit-form-timing" class="display-none" />
+
             <div class="block-title">{{@global.LANGUAGE.PROMPT_MSG010}}</div>
             <div class="block">
                 {{@global.LANGUAGE.PROMPT_MSG011}}
@@ -80,7 +85,7 @@
             </div>
 
 
-            <input type="submit" id="submit-form-timing" class="display-none" />
+
             <div class="block-title">{{@global.LANGUAGE.TIMING_MSG00}}</div>
             <div class="block">
                 {{@global.LANGUAGE.PROMPT_MSG001}}
@@ -165,7 +170,7 @@
                 </ul>
             </div>
 
-            <div class="list no-hairlines margin-top-half">
+            <div class="list no-hairlines margin-top-half overflow-hidden">
                 <ul>
                     <li class="item-content">
                         <div class="item-inner">
@@ -226,7 +231,7 @@
                 countrys.find( ({ CountryCode }) => CountryCode === userInfo.CountryCode ).Selected = true;
                 if(!trackingPhone && userInfo.Mobile){
                     let phoneCode = countrys.find( ({ CountryCode }) => CountryCode === userInfo.CountryCode ).CountryPhoneCode;
-                    trackingPhone = userInfo.Mobile.replace(phoneCode, '');
+                    trackingPhone = userInfo.Mobile.replace(phoneCode.replace('+',''), '').replace('+','');
                 }
             }
 
@@ -288,7 +293,8 @@
                     if (data.ScheduleState){
                         bgGeo.requestPermission().then((status) => {
                             bgGeo.startSchedule(function() {
-                                self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
+                                //self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG007});
+                                self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
                                 mainView.router.back();
                             });
                         }).catch((status) => {
@@ -299,7 +305,8 @@
 
                     }else{
                         bgGeo.stopSchedule(function() {
-                            self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG009});
+                            //self.$app.methods.customDialog({text: LANGUAGE.PROMPT_MSG009});
+                            self.$app.methods.customNotification({text:LANGUAGE.PROMPT_MSG014});
                             // You must explicitly stop tracking if currently enabled
                             bgGeo.stop();
                             mainView.router.back();
@@ -344,6 +351,9 @@
                         self.$app.methods.customDialog({text:LANGUAGE.PROMPT_MSG012});
                         return;
                     }
+                    if(panicState && smsTo.length){
+                        SMSHelper.checkSMSPermission();
+                    }
 
                     let panicConfig = {
                         State: panicState,
@@ -351,6 +361,8 @@
                         SMSTo: smsTo,
                     };
                     self.$app.methods.setInStorage({name:'panicConfig', data: panicConfig});
+
+
 
                     self.$app.progressbar.show();
                     self.$app.request.promise.post(API_URL.VERIFY_DEVICE, {IMEI: imei}, 'json')

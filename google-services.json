@@ -32,10 +32,48 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1097482483564:android:b699800f0d2513318d2549",
+        "android_client_info": {
+          "package_name": "com.boatwatch.pro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1097482483564-mt5mtgj811opr3rgev6si0ci7079rvsd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhjlBAHlTG35_oOSom77Oci0LMJsgoEZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1097482483564-mt5mtgj811opr3rgev6si0ci7079rvsd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -68,10 +106,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -104,10 +143,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -140,10 +180,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -176,10 +217,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -212,10 +254,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -248,10 +291,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -284,10 +328,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -320,10 +365,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -356,10 +402,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -392,10 +439,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -428,10 +476,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -464,10 +513,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -500,10 +550,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -536,10 +587,48 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1097482483564:android:371cd07d2c5f6c118d2549",
+        "android_client_info": {
+          "package_name": "com.ttc.mobiletrack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1097482483564-mt5mtgj811opr3rgev6si0ci7079rvsd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhjlBAHlTG35_oOSom77Oci0LMJsgoEZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1097482483564-mt5mtgj811opr3rgev6si0ci7079rvsd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]
@@ -572,10 +661,11 @@
               "client_type": 3
             },
             {
-              "client_id": "1097482483564-toake5mo51m2hd71aql9cmsmarku42e8.apps.googleusercontent.com",
+              "client_id": "1097482483564-8derkdmg0gro4s2fqhtabm6mmn0tis3l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sinopacific.vici"
+                "bundle_id": "com.boatwatch.pro",
+                "app_store_id": "1512177992"
               }
             }
           ]

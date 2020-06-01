@@ -1,18 +1,18 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
-	id="com.sinopacific.phonetrack" 
-	version="1.0.1"
-	android-versionCode="28"
-    ios-CFBundleVersion="28"
+	id="com.ttc.mobiletrack" 
+	version="1.0.0"
+	android-versionCode="1"
+    ios-CFBundleVersion="1"
 	xmlns="http://www.w3.org/ns/widgets" 
 	xmlns:cdv="http://cordova.apache.org/ns/1.0"  	
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	defaultlocale="en-US">
-    <name>PhoneTrack</name>
+    <name>TTC MobileTrack</name>
     <description>
-        PhoneTrack gps tracking app
+        TTC MobileTrack gps tracking app
     </description>
-    <author email="support@phonegap.com" href="http://quiktrak.com.au">
+    <author email="support@phonegap.com" href="https://quiktrak.com.au">
         M2M Global Technology Limited
     </author>
     <content src="index.html" />
@@ -39,9 +39,9 @@
         </edit-config>   
         <!-- background-geolocation -->
        <config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
-           <meta-data
+           <!-- <meta-data
               android:name="com.transistorsoft.locationmanager.license_key"
-              android:value="14a13ab746497626e404cd586b9d6a0ccd3f6031bd1657799b777c0fa149a956" />
+              android:value="14a13ab746497626e404cd586b9d6a0ccd3f6031bd1657799b777c0fa149a956" /> -->
        </config-file>
         <!-- /background-geolocation -->	  	       	  	
 	</platform>
@@ -52,27 +52,28 @@
     <!-- /sms plugin -->
 
 	<platform name="ios">
-        <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
+       <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
             <string>You can take a photo of your asset using camera and upload it into the app</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
             <string>You can select photo of your asset in your photo library and upload it into the app</string>
         </edit-config>
-        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
-            <string>Need location access to find things nearby</string>
-        </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryAddUsageDescription">
             <string>Need photo library access to save pictures there</string>
         </edit-config>
-        <config-file parent="NSLocationAlwaysAndWhenInUseUsageDescription" target="*-Info.plist">
-            <string>Background location tracking is required for our app to get phone location when user turn it on</string>
-        </config-file>
-        <config-file parent="NSLocationAlwaysUsageDescription" target="*-Info.plist">
-            <string>Background location tracking is required for our app to get phone location when user turn it on</string>
-        </config-file>
-        <config-file parent="NSMotionUsageDescription" target="*-Info.plist">
+        
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
+            <string>App would like to use your location to display it on the TTC LiveTrack Web platform with your other assets for remote tracking and security. It is secure and private</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysAndWhenInUseUsageDescription">
+            <string>App would like to use your location to display it on the TTC LiveTrack Web platform with your other assets for remote tracking and security. It is secure and private</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysUsageDescription">
+            <string>App would like to use your location to display it on the TTC LiveTrack Web platform with your other assets for remote tracking and security. It is secure and private</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSMotionUsageDescription">
             <string>Device motion updates help determine when the device is stationary so the app can save power by turning off location-updates</string>
-        </config-file>
+        </edit-config>
     </platform>
 
     <platform name="ios">
@@ -103,7 +104,7 @@
       <resource-file src="GoogleService-Info.plist" />
     </platform>
     <!-- android -->
-    <plugin name="cordova-background-geolocation-lt" spec="3.6.3" source="npm"> </plugin>
+    
      <!-- ios -->
     <!-- <plugin name="cordova-background-geolocation-lt" spec="3.4.2" source="npm"> </plugin> -->
 
@@ -113,12 +114,15 @@
     <plugin name="cordova-plugin-buildinfo" source="npm" spec="~4.0.0" />
     <plugin name="cordova-plugin-splashscreen" source="npm" spec="~5.0.2" />    
     <plugin name="phonegap-plugin-mobile-accessibility" spec="~1.0.5" /> 
-
-    <!--    <plugin name="cordova-plugin-wkwebview-engine" spec="~1.2.1" />-->
+    <plugin name="cordova-plugin-wkwebview-engine" spec="~1.2.1" />
     <plugin name="cordova-plugin-wkwebview-file-xhr" spec="~2.1.4"/>
     <plugin name="cordova-sms-plugin" source="npm" spec="1.0.0" />    
 	<plugin name="cordova-plugin-android-permissions" source="npm" spec="1.0.2" />
 	<plugin name="cordova-plugin-x-socialsharing" source="npm" spec="5.6.4"/>
+	<plugin name="cordova-background-geolocation-lt" source="npm" spec="3.6.3" />
+	<plugin name="cordova-plugin-safariviewcontroller" source="npm" spec="1.6.0"/>
+    <plugin name="cordova-plugin-phone-call" source="npm" spec="1.0.7" />
+
 
 	<!--<plugin name="phonegap-plugin-push" source="npm" spec="2.3.0"> 
         <variable name="SENDER_ID" value="1097482483564" /> 

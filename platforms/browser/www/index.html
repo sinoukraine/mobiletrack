@@ -64,6 +64,9 @@
                                             </div>
                                         </div>
                                     </li>
+                                    <li class="text-align-right">
+                                        <a href="/forgot-password/" class="text-color-black margin-right text-decoration-underline">{{@global.LANGUAGE.LOGIN_SCREEN_MSG04}}</a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="list">
@@ -72,7 +75,8 @@
                                         <button type="submit" class="button button-fill button-large">{{@global.LANGUAGE.LOGIN_SCREEN_MSG02}}</button>
                                     </li>
                                     <li class="padding">
-                                        <button type="button" class="button button-fill button-large color-white text-color-black">{{@global.LANGUAGE.LOGIN_SCREEN_MSG03}}</button>
+                                        <a href="{{RegisterUrl}}" target="_system" class="external button button-fill button-large color-white text-color-black">{{@global.LANGUAGE.LOGIN_SCREEN_MSG03}}</a>
+                                        <!--<button type="button" class="button button-fill button-large color-white text-color-black">{{@global.LANGUAGE.LOGIN_SCREEN_MSG03}}</button>-->
                                     </li>
                                 </ul>
                             </div>
@@ -92,8 +96,16 @@
 <script type="text/javascript" src="resources/plugins/leaflet.markercluster/js/leaflet.markercluster.js"></script>
 <!-- Marker Cluster Sub Group -->
 <script type="text/javascript" src="resources/plugins/leaflet.subgroup/leaflet.featuregroup.subgroup.js"></script>
+<!-- Moment -->
+<script type="text/javascript" src="resources/libraries/moment/moment.min.js" ></script>
+<script type="text/javascript" src="resources/libraries/moment/moment-duration-format.js" ></script>
+<script type="text/javascript" src="resources/libraries/moment/moment-timezone-with-data-10-year-range.min.js" ></script>
+<!-- TimeSpan -->
+<script type="text/javascript" src="resources/libraries/TimeSpan.min.js"></script>
+<script src="resources/libraries/jClass.mini.js"></script>
 <script src="resources/app/languages.js"></script>
 <script src="resources/app/helper.js"></script>
+<script src="resources/app/ProtocolHelpers.js?version=0.5" ></script>
 <script src="resources/app/routes.js"></script>
 <script src="resources/app/app.js"></script>
 

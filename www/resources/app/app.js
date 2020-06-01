@@ -34,8 +34,8 @@ API_URL.VERIFY_DEVICE = API_DOMIAN1 + 'Common/V1/Activation/Verify';
 API_URL.UPLOAD_LINK = API_DOMIAN1 + 'QuikTrak/V1/Device/UploadGPS2';
 
 API_URL.SHARE_POSITION = API_DOMAIN4 + 'maps';
-API_URL.ADD_NEW = API_DOMAIN3 + 'activation/activate';
-API_URL.REGISTER = API_DOMAIN3 + 'activation/';
+API_URL.ADD_NEW = API_DOMAIN3 + 'ttc.mobiletrack.activation/activate';
+API_URL.REGISTER = API_DOMAIN3 + 'ttc.mobiletrack.activation/';
 
 API_URL.GET_ALL_POSITIONS = API_DOMIAN1 + "QuikTrak/V1/Device/GetPosInfos2";
 
@@ -71,9 +71,9 @@ $$('#app').append(compiledTemplate({RegisterUrl: API_URL.REGISTER}));
 
 // Init App
 let app = new Framework7({
-    id: 'com.sinopacific.phonetrack',
+    id: 'com.ttc.mobiletrack',
     root: '#app',
-    name: 'PhoneTrack',
+    name: 'TTC MobileTrack',
     theme: theme,
     view: {
         //stackPages: true,
@@ -651,7 +651,43 @@ let app = new Framework7({
                     }*/
                 });
         },
-
+        openUrl: function (url, readerMode) {
+            if(!url){
+                return;
+            }
+            if (typeof SafariViewController === 'undefined'){
+                window.open(url, '_system', 'location=yes');
+                return;
+            }
+            SafariViewController.isAvailable(function (available) {
+                if (available) {
+                    SafariViewController.show({
+                            url: url,
+                            hidden: false, // default false
+                            animated: true, // default true, note that 'hide' will reuse this preference (the 'Done' button will always animate though)
+                            transition: 'curl', // unless animated is false you can choose from: curl, flip, fade, slide (default)
+                            enterReaderModeIfAvailable: readerMode, // default false
+                           // barColor: "#0000ff", // default is white (iOS 10 only)
+                            //tintColor: "#ffffff" // default is ios blue
+                        },
+                        function(result) {
+                            if (result.event === 'opened') {
+                                console.log('opened');
+                            } else if (result.event === 'loaded') {
+                                console.log('loaded');
+        //                SafariViewController.hide();
+                            } else if (result.event === 'closed') {
+                                console.log('closed');
+                            }
+                        },
+                        function(msg) {
+                            console.log("KO: " + JSON.stringify(msg));
+                        })
+                } else {
+                    window.open(url, '_system', 'location=yes');
+                }
+            })
+        },
         clickOnPanicButton: function () {
             let self = this;
 
@@ -1189,3 +1225,9 @@ $$('body').on('click', '.password-toggle', function(){
 $$('body').on('click', '.panicButton', function(){
     app.methods.clickOnPanicButton();
 });
+$$('body').on('click', '.openUrl', function(){
+    app.methods.openUrl( $$(this).data('href') );
+});
+
+
+

@@ -32,6 +32,9 @@ window.LanguagePackages= {
 		"COM_MSG026": "Northwest",
 		"COM_MSG027": "Unknown",
 		"COM_MSG028": "Share",
+		"COM_MSG029": "Loading...",
+		"COM_MSG030": "n/a",
+
 
 		"COM_MSG037": "Latitude",
 		"COM_MSG038": "Longitude",
@@ -57,19 +60,25 @@ window.LanguagePackages= {
 		"PROMPT_MSG017": 'Speed',
 		"PROMPT_MSG018": 'Heading',
 		"PROMPT_MSG019": 'My location',
-
+		"PROMPT_MSG020": 'Only numbers please!',
+		"PROMPT_MSG021": "Are you sure you want to close the application?",
 		"PROMPT_MSG022": "Please set up your Panic Button Behaviour",
 		"PROMPT_MSG023": "Data not saved",
-
+		"PROMPT_MSG024": "In this section you can add the ability to track your device with other accounts",
+		"PROMPT_MSG025": "Turn On tracking first",
 		"PROMPT_MSG026": "Panic Button is turned off. Go to turn it on?",
-
+		"PROMPT_MSG027": "SMS has been sent",
 		"PROMPT_MSG028": "Emergency phone call executed",
+		"PROMPT_MSG029": "This feature under development",
 
 		"PROMPT_MSG052": "Here you can set new password - min 6, max 32 characters and contains no spaces",
 		"PROMPT_MSG053": "Passwords do not match",
 		"PROMPT_MSG054": "Password should contain at least 6 characters",
 		"PROMPT_MSG055": "Password has been changed. Please, login with new credential",
 		"PROMPT_MSG056": "Wrong current password",
+		"PROMPT_MSG057": "Phone Timing is not setted",
+		"PROMPT_MSG058": "Asset not belong to current account",
+		"PROMPT_MSG059": "No Position Data",
 
 		"PROMPT_MSG068": "You haven't added any Emergency Contact, please go to User Settings to add them",
 
@@ -78,21 +87,45 @@ window.LanguagePackages= {
 		"HOME_MSG01": "Name",
 		"HOME_MSG02": "Phone",
 		"HOME_MSG03": "Email",
+		"HOME_MSG04": "Battery",
+		"HOME_MSG05": "Heading",
+		"HOME_MSG06": "Address",
+		"HOME_MSG07": "Speed",
+		"HOME_MSG08": "Date, Time",
 
 		"MENU_MSG00": "Home",
 		"MENU_MSG01": "User Settings",
 		"MENU_MSG02": "Sign Out",
+		"MENU_MSG03": "Add New",
 
 		"LOGIN_SCREEN_MSG00": "Login Name / Email",
 		"LOGIN_SCREEN_MSG01": "Password",
 		"LOGIN_SCREEN_MSG02": "Sign In",
 		"LOGIN_SCREEN_MSG03": "Registration",
+		"LOGIN_SCREEN_MSG04": "Forgot Password?",
+
+		"PASSWORD_FORGOT_MSG00": "Please, enter your registered E-mail address",
+		"PASSWORD_FORGOT_MSG01": "Please, enter E-mail",
+		"PASSWORD_FORGOT_MSG02": "Please, enter Verification Code that we have sent to your Email address",
+		"PASSWORD_FORGOT_MSG03": "Verification Code",
+		"PASSWORD_FORGOT_MSG04": "Please, enter Verification Code",
+		"PASSWORD_FORGOT_MSG05": "Please, enter New Password(minimum 6 characters)",
+		"PASSWORD_FORGOT_MSG06": "New Password",
+		"PASSWORD_FORGOT_MSG07": "Incorrect E-mail",
+		"PASSWORD_FORGOT_MSG08": "Incorrect Verification Code",
+		"PASSWORD_FORGOT_MSG09": "Repeat password",
+		"PASSWORD_FORGOT_MSG10": "Passwords do not match",
+		"PASSWORD_FORGOT_MSG11": "Incorrect Password, please use another",
+		"PASSWORD_FORGOT_MSG12": "Success! Password changed",
+		"PASSWORD_FORGOT_MSG13": "E-mail address",
+		"PASSWORD_FORGOT_MSG14": "Code",
+		"PASSWORD_FORGOT_MSG15": "Password",
 
 		"PROFILE_SETTINGS_MSG00": "User",
 		"PROFILE_SETTINGS_MSG01": "Password",
 		"PROFILE_SETTINGS_MSG02": "First Name",
 		"PROFILE_SETTINGS_MSG03": "Last Name",
-		"PROFILE_SETTINGS_MSG04": "Email",
+		"PROFILE_SETTINGS_MSG04": "E-mail",
 		"PROFILE_SETTINGS_MSG05": "Phone",
 		"PROFILE_SETTINGS_MSG06": "User Info",
 		"PROFILE_SETTINGS_MSG07": "Emergency Contacts",
@@ -116,6 +149,7 @@ window.LanguagePackages= {
 		"PANIC_BUTTON_MSG00": "Panic Button",
 		"PANIC_BUTTON_MSG01": "Emergency Phone",
 		"PANIC_BUTTON_MSG02": "Send SMS",
+		"PANIC_BUTTON_MSG03": "Panic",
 
 		"TRACKING_PLUGIN_MSG00": "Location unknown",
 		"TRACKING_PLUGIN_MSG01": "Location permission denied",
@@ -124,6 +158,9 @@ window.LanguagePackages= {
 		"TRACKING_PLUGIN_MSG04": "Unknown Error",
 		"TRACKING_PLUGIN_MSG05": "Location data is empty",
 		"TRACKING_PLUGIN_MSG06": "Tracking permission denied",
+
+		"DEVICE_SHARE_MSG00": "Device Share",
+		"DEVICE_SHARE_MSG01": "Email / Login Name",
 
 
 
