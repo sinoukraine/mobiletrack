@@ -39,9 +39,9 @@
         </edit-config>   
         <!-- background-geolocation -->
        <config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
-           <!-- <meta-data
+           <meta-data
               android:name="com.transistorsoft.locationmanager.license_key"
-              android:value="14a13ab746497626e404cd586b9d6a0ccd3f6031bd1657799b777c0fa149a956" /> -->
+              android:value="e107085dc16f095031af1972b3c39b6f77992ecea13942e377fdd6282a2c21d9" />
        </config-file>
         <!-- /background-geolocation -->	  	       	  	
 	</platform>
