@@ -1132,7 +1132,7 @@ let mainView = app.views.create('.view-main', {
 let SMSHelper = {
     sendSms: function(data) {
         //CONFIGURATION
-        let options = {
+        /*let options = {
             replaceLineBreaks: false, // true to replace \n by a new line, false by default
             android: {
                 //intent: 'INTENT'  // send SMS with the native android SMS messaging
@@ -1165,7 +1165,9 @@ let SMSHelper = {
             if (data.callback instanceof Function) {
                 data.callback();
             }
-        });
+        });*/
+
+        if(SMS) SMS.sendSMS(data.number, data.message, function(){}, function(str){alert(str);});
     },
     checkSMSPermission: function(data=false) {
         let self = this;

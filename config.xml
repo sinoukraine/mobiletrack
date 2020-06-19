@@ -45,11 +45,11 @@
        </config-file>
         <!-- /background-geolocation -->
 
-        <config-file target="/manifest/application" file="app/src/main/AndroidManifest.xml" mode="add" > 
-         		<uses-permission android:name="android.permission.READ_PHONE_STATE"/>       
-              <uses-permission android:name="android.permission.SEND_SMS"/>
-              
-       </config-file>
+       <!--  <config-file target="/manifest/application" file="app/src/main/AndroidManifest.xml" mode="add" > 
+        		<uses-permission android:name="android.permission.READ_PHONE_STATE"/>       
+             <uses-permission android:name="android.permission.SEND_SMS"/>
+             
+              </config-file> -->
 
         <!-- not working -->    	
 	    <!-- <config-file target="AndroidManifest.xml" parent="/manifest">
@@ -133,7 +133,9 @@
     <plugin name="phonegap-plugin-mobile-accessibility" spec="~1.0.5" /> 
     <plugin name="cordova-plugin-wkwebview-engine" spec="~1.2.1" />
     <plugin name="cordova-plugin-wkwebview-file-xhr" spec="~2.1.4"/>
-    <plugin name="cordova-sms-plugin" source="npm" spec="1.0.0" />    
+   <!--  <plugin name="cordova-sms-plugin" source="npm" spec="1.0.0" />    --> 
+    <plugin name="cordova-plugin-sms" source="npm" spec="1.0.0" />
+   
 	<plugin name="cordova-plugin-android-permissions" source="npm" spec="1.0.2" />
 	<plugin name="cordova-plugin-x-socialsharing" source="npm" spec="5.6.4"/>
 	<plugin name="cordova-background-geolocation-lt" source="npm" spec="3.6.3" />
