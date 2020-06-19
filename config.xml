@@ -45,7 +45,7 @@
        </config-file>
         <!-- /background-geolocation -->
 
-        <config-file target="AndroidManifest.xml" parent="/manifest" mode="add" >        
+        <config-file target="/manifest/application" file="app/src/main/AndroidManifest.xml" mode="add" >        
               <uses-permission android:name="android.permission.SEND_SMS"/>
        </config-file>
 
