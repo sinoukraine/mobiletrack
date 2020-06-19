@@ -46,15 +46,14 @@
         <!-- /background-geolocation -->
 
         <!-- not working -->
-    	<!-- <platform name="android">
-    	    <config-file target="AndroidManifest.xml" parent="/manifest">
-    	        <uses-permission android:name="android.permission.SEND_SMS"/>
-    	    </config-file>
-    	</platform> -->
-
-	    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/uses-permission" xmlns:android="http://schemas.android.com/apk/res/android">
-	        <uses-permission android:name="android.permission.SEND_SMS" />
-	    </edit-config>	  	       	  	
+    	
+	    <config-file target="AndroidManifest.xml" parent="/manifest">
+	        <uses-permission android:name="android.permission.SEND_SMS"/>
+	    </config-file>
+    	
+	    <!-- <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/uses-permission" xmlns:android="http://schemas.android.com/apk/res/android">
+	      	       	  	    <uses-permission android:name="android.permission.SEND_SMS" />
+	      	       	  	</edit-config>	 -->  	       	  	
 	</platform>
 	<!-- sms plugin -->        
    <!--  <config-file platform="android" target="AndroidManifest.xml" parent="/manifest" mode="add" > 
