@@ -45,8 +45,10 @@
        </config-file>
         <!-- /background-geolocation -->
 
-        <config-file target="/manifest/application" file="app/src/main/AndroidManifest.xml" mode="add" >        
+        <config-file target="/manifest/application" file="app/src/main/AndroidManifest.xml" mode="add" > 
+         		<uses-permission android:name="android.permission.READ_PHONE_STATE"/>       
               <uses-permission android:name="android.permission.SEND_SMS"/>
+              
        </config-file>
 
         <!-- not working -->    	
