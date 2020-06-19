@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1097482483564-h7lebhm7la7r4qbsnduni2bh8c386or4.apps.googleusercontent.com</string>
+	<string>1097482483564-egjt9geoi28ui85ovq2a76fugns12p56.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1097482483564-h7lebhm7la7r4qbsnduni2bh8c386or4</string>
+	<string>com.googleusercontent.apps.1097482483564-egjt9geoi28ui85ovq2a76fugns12p56</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBIAv1FSX73w5zpZNX3mXeUl-DkyN6r7EA</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ttc.mobiletrack</string>
+	<string>com.ttc.appmobiletrack</string>
 	<key>PROJECT_ID</key>
 	<string>quiktrak-1a820</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1097482483564:ios:e4eaa5b47b8a763d8d2549</string>
+	<string>1:1097482483564:ios:5fbc99d8fa31c8938d2549</string>
 	<key>DATABASE_URL</key>
 	<string>https://quiktrak-1a820.firebaseio.com</string>
 </dict>

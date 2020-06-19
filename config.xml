@@ -43,13 +43,26 @@
               android:name="com.transistorsoft.locationmanager.license_key"
               android:value="e107085dc16f095031af1972b3c39b6f77992ecea13942e377fdd6282a2c21d9" />
        </config-file>
-        <!-- /background-geolocation -->	  	       	  	
+        <!-- /background-geolocation -->
+
+        <!-- not working -->
+    	<!-- <platform name="android">
+    	    <config-file target="AndroidManifest.xml" parent="/manifest">
+    	        <uses-permission android:name="android.permission.SEND_SMS"/>
+    	    </config-file>
+    	</platform> -->
+
+	    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/uses-permission" xmlns:android="http://schemas.android.com/apk/res/android">
+	        <uses-permission android:name="android.permission.SEND_SMS" />
+	    </edit-config>	  	       	  	
 	</platform>
 	<!-- sms plugin -->        
    <!--  <config-file platform="android" target="AndroidManifest.xml" parent="/manifest" mode="add" > 
        <uses-permission android:name="android.permission.SEND_SMS" />            
    </config-file> -->
     <!-- /sms plugin -->
+
+
 
 	<platform name="ios">
        <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
