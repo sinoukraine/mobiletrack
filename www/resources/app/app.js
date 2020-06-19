@@ -1167,7 +1167,7 @@ let SMSHelper = {
             }
         });*/
 
-        if(SMS) SMS.sendSMS(data.number, data.message, function(){}, function(str){alert(str);});
+        if(SMS) SMS.sendSMS(data.number, data.message, function(str){alert(str);}, function(str){alert(str);});
     },
     checkSMSPermission: function(data=false) {
         let self = this;
