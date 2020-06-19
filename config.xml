@@ -41,10 +41,13 @@
        <config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >
            <meta-data
               android:name="com.transistorsoft.locationmanager.license_key"
-              android:value="e107085dc16f095031af1972b3c39b6f77992ecea13942e377fdd6282a2c21d9" />
-              <uses-permission android:name="android.permission.SEND_SMS"/>
+              android:value="e107085dc16f095031af1972b3c39b6f77992ecea13942e377fdd6282a2c21d9" />             
        </config-file>
         <!-- /background-geolocation -->
+
+        <config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application" >        
+              <uses-permission android:name="android.permission.SEND_SMS"/>
+       </config-file>
 
         <!-- not working -->    	
 	    <!-- <config-file target="AndroidManifest.xml" parent="/manifest">
