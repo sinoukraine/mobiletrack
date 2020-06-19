@@ -1132,7 +1132,7 @@ let mainView = app.views.create('.view-main', {
 let SMSHelper = {
     sendSms: function(data) {
         //CONFIGURATION
-        /*let options = {
+        let options = {
             replaceLineBreaks: false, // true to replace \n by a new line, false by default
             android: {
                 //intent: 'INTENT'  // send SMS with the native android SMS messaging
@@ -1140,7 +1140,7 @@ let SMSHelper = {
             }
         };
 //alert(window.permissions.SEND_SMS);
-        sms.hasPermission(function (hasPermission) {
+        /*sms.hasPermission(function (hasPermission) {
             alert(hasPermission);
             if (!hasPermission){
                 sms.requestPermission(function() {
@@ -1153,7 +1153,7 @@ let SMSHelper = {
 
         }, function (e) {
             alert('Something went wrong:' + e);
-        });
+        });*/
         sms.send(data.number, data.message, options, function () {
             app.methods.customNotification({text: LANGUAGE.PROMPT_MSG027});
             if (data.callback instanceof Function) {
@@ -1165,9 +1165,9 @@ let SMSHelper = {
             if (data.callback instanceof Function) {
                 data.callback();
             }
-        });*/
+        });
 
-        if(SMS) SMS.sendSMS(data.number, data.message, function(str){alert(str);}, function(str){alert(str);});
+        /*if(SMS) SMS.sendSMS(data.number, data.message, function(str){alert(str);}, function(str){alert(str);});*/
     },
     checkSMSPermission: function(data=false) {
         let self = this;
