@@ -134,7 +134,7 @@
     <plugin name="cordova-plugin-wkwebview-engine" spec="~1.2.1" />
     <plugin name="cordova-plugin-wkwebview-file-xhr" spec="~2.1.4"/>
    <!--  <plugin name="cordova-sms-plugin" source="npm" spec="1.0.0" />    --> 
-    <plugin name="cordova-plugin-sms" source="npm" spec="1.0.0" />
+    <plugin name="cordova-plugin-sms" source="npm" spec="1.0.5" />
    
 	<plugin name="cordova-plugin-android-permissions" source="npm" spec="1.0.2" />
 	<plugin name="cordova-plugin-x-socialsharing" source="npm" spec="5.6.4"/>
